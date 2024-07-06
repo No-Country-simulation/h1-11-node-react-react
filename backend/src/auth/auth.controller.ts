@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Headers, SetMetadata } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Headers, SetMetadata, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreatePatientDto, LoginUserDto } from './dto';
 
@@ -6,6 +6,7 @@ import { Auth, GetUser } from './decorators';
 import { ValidRoles } from './interfaces';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dto/user.dto';
+import { Response } from 'express';
 
 
 @ApiTags('Auth')
@@ -38,6 +39,17 @@ export class AuthController {
     @GetUser() user
   ) {
     return this.authService.checkAuthStatus(user);
+  }
+
+  @Get('validate/:token')
+  async validateEmail(@Param('token') token: string, @Res() res: Response) {
+    const result = await this.authService.validateEmail(token);
+    if (result.success) {
+      // return res.redirect(`${process.env.FRONTEND_URL}/email-validated?email=${result.email}`);
+      return res.redirect('https://www.google.com.pe');
+    } else {
+      return res.redirect(`${process.env.FRONTEND_URL}/email-validation-failed`);
+    }
   }
 
   // @Get()

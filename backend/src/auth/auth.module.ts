@@ -9,6 +9,7 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UserRoleGuard } from './guards/user-role/user-role.guard';
 import { GetUser } from './decorators';
+import { EmailModule } from 'src/email/email.module';
 
 @Module({
   controllers: [AuthController],
@@ -27,7 +28,10 @@ import { GetUser } from './decorators';
           expiresIn: '2h'
         }
       })
-    })
+    }),
+
+    EmailModule
+
   ],
   exports: [ JwtStrategy, PassportModule, JwtModule]
 })

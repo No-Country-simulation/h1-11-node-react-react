@@ -5,6 +5,7 @@ import { CreatePatientDto, LoginUserDto } from './dto';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
+import { EmailService } from 'src/email/email.service';
 
 
 @Injectable()
@@ -13,7 +14,8 @@ export class AuthService extends PrismaClient implements OnModuleInit {
   private readonly logger = new Logger('AuthService');
 
   constructor(
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly emailService: EmailService
   ) {
     super();
   }
@@ -51,6 +53,8 @@ export class AuthService extends PrismaClient implements OnModuleInit {
         }
       });
 
+      await this.sendEmailValidationLink(newUser.email);
+
       const { password: _, ...userWithoutPassword } = newUser;
 
       return {
@@ -58,8 +62,6 @@ export class AuthService extends PrismaClient implements OnModuleInit {
         token: await this.signJWT({ id: newUser.id })
       };
     } catch (error) {
-      // console.log(error);
-      // this.handleDBExceptions(error)
       throw new BadRequestException(error.message)
     }
   }
@@ -106,5 +108,54 @@ export class AuthService extends PrismaClient implements OnModuleInit {
     if (error.code === '23505') throw new BadRequestException(error.detail)
     this.logger.error(error)
     throw new InternalServerErrorException('Unexpected error, check server logs')
+  }
+
+  private async sendEmailValidationLink(email: string) {
+    const token = this.jwtService.sign({ email });
+    const link = `${process.env.WEBSERVICE_URL}/api/auth/validate/${token}`;
+    const html = `
+      <h1>Validate your email</h1>
+      <p>Please click the following link to validate your email:</p>
+      <a href="${link}">Validate your email</a>
+    `;
+
+    const options = {
+      to: email,
+      subject: 'Validate your email',
+      html,
+    };
+
+    const isSent = await this.emailService.sendEmail(options);
+    if (!isSent) {
+      throw new InternalServerErrorException('Error sending email');
+    }
+
+    return true;
+  }
+
+  async validateEmail(token: string) {
+    let payload;
+    try {
+      payload = this.jwtService.verify(token);
+    } catch (e) {
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    const { email } = payload;
+    if (!email) {
+      throw new InternalServerErrorException('Email not in token');
+    }
+
+    const user = await this.patient.findUnique({ where: { email } })
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    await this.patient.update({
+      where: { email },
+      data: { isValidateEmail: true },
+    });
+
+    return { success: true, message: 'Email successfully validated', email };
   }
 }
