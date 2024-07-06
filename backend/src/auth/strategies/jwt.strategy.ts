@@ -12,23 +12,13 @@ export class JwtStrategy extends PrismaClientMixin(PassportStrategy(Strategy)) i
   private readonly logger = new Logger('Authservice');
   private prisma: PrismaClient;
 
-  // constructor(
-  //   configService: ConfigService
-  // ) {
-  //   super({
-  //     secretOrKey: configService.get('JWT_SECRET'),
-  //     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  //     // ignoreExpiration: false,
-  //     // (req) => req.cookies['jwt']
-  //   });
-  // }
+
 
   constructor() {
-    // Asegúrate de pasar correctamente la configuración de la estrategia JWT
     const options: StrategyOptions = {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: envs.jwtSecret, // Cambia esto por tu clave secreta real
+      secretOrKey: envs.jwtSecret,
     };
 
     super(options);
