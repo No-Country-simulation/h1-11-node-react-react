@@ -37,3 +37,30 @@ model Patient {
 
   @@index([isActive])
 }
+
+enum AppointmentState {
+  PENDIENTE
+  CONFIRMADA
+  CANCELADA
+  COMPLETADA
+  NO_ASISTIDA
+  REPROGRAMADA
+}
+
+model Appointment {
+  id          String    @id @default(uuid())
+  patientId   String
+  doctorId    String
+  date        DateTime
+  startTime   DateTime
+  endTime     DateTime
+  description String
+  state       AppointmentState  @default(PENDIENTE)
+  isActive    Boolean @default(true)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([patientId, doctorId, date])
+  @@unique([date, startTime, endTime])
+}
