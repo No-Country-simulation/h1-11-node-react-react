@@ -7,21 +7,25 @@ import { PrismaClient } from '@prisma/client';
 export class AppointmentsService extends PrismaClient implements OnModuleInit {
   private readonly logger = new Logger('AppointmentService');
 
-  constructor(private prisma: PrismaService) {
-    super();
-  }
   onModuleInit() {
     this.$connect();
     this.logger.log('Appointments Service connected to database')
   }
   async create(createAppointmentDto: CreateAppointmentDto) {
     try {
-      const newAppointment = await this.prisma.appointment.create({
-        data: {
-          ...createAppointmentDto
-        }
+      const overlappingAppointments = await this.findOverlappingAppointments(
+        createAppointmentDto.date,
+        createAppointmentDto.startTime,
+        createAppointmentDto.endTime
+      );
+      if (overlappingAppointments.length > 0) {
+        throw new ConflictException('Ya existe una cita que se superpone con este horario');
+      }
+
+      const newAppointment = await this.appointment.create({
+        data: createAppointmentDto,
       });
-      return { success: true, message: 'Appointment created successfully', newAppointment };
+      return { success: true, message: 'Cita médica creada correctamente', newAppointment };
     } catch (error) {
       throw new BadRequestException(error.message)
     }
@@ -29,15 +33,15 @@ export class AppointmentsService extends PrismaClient implements OnModuleInit {
 
   async findAll(state?: AppointmentState) {
     const where = state ? { state } : {isActive: true};
-    return this.prisma.appointment.findMany({ where });
+    return this.appointment.findMany({ where });
   }
 
   findOne(id: string) {
-    return this.prisma.appointment.findUnique({ where: { id } });
+    return this.appointment.findUnique({ where: { id } });
   }
 
   async update(id: string, updateAppointmentDto: UpdateAppointmentDto) {
-    const appointment = await this.prisma.appointment.findOne(id);
+    const appointment = await this.appointment.findUnique({where: {id}});
     if (!appointment) {
       throw new NotFoundException('Cita no encontrada');
     }
@@ -54,14 +58,14 @@ export class AppointmentsService extends PrismaClient implements OnModuleInit {
         throw new ConflictException('Operación inválida. El horario seleccionado se superpone con otra cita existente');
       }
     }
-    return this.prisma.appointment.update({
+    return this.appointment.update({
       where: { id },
-      updateAppointmentDto,
+      data: updateAppointmentDto,
     });
   }
 
   async remove(id: string) {
-    return await this.prisma.appointment.update({
+    return await this.appointment.update({
       where: { id },
       data: {
         isActive: false,
@@ -71,7 +75,7 @@ export class AppointmentsService extends PrismaClient implements OnModuleInit {
   }
 
   async findOverlappingAppointments(date: Date, startTime: Date, endTime: Date, excludeId?: string) {
-    return this.prisma.appointment.findMany({
+    return this.appointment.findMany({
       where: {
         date: date,
         OR: [
@@ -96,19 +100,5 @@ export class AppointmentsService extends PrismaClient implements OnModuleInit {
         ]
       }
     });
-  }
-
-  async scheduleAppointment(createAppointmentDto: CreateAppointmentDto) {
-    const overlappingAppointments = await this.findOverlappingAppointments(
-      createAppointmentDto.date,
-      createAppointmentDto.startTime,
-      createAppointmentDto.endTime
-    );
-
-    if (overlappingAppointments.length > 0) {
-      throw new ConflictException('Ya existe una cita en ese horario');
-    }
-
-    return this.create(createAppointmentDto);
   }
 }

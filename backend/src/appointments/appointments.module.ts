@@ -5,9 +5,6 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   controllers: [AppointmentsController],
-  providers: [AppointmentsService],
-  imports: [
-    ConfigModule
-  ]
+  providers: [AppointmentsService]
 })
 export class AppointmentsModule {}

@@ -9,14 +9,7 @@ export class AppointmentsController {
 
   @Post()
   async create(@Body() createAppointmentDto: CreateAppointmentDto) {
-    try{
-      return await this.appointmentsService.create(createAppointmentDto);
-    } catch (error) {
-      if (error instanceof ConflictException) {
-        throw new ConflictException(error.message);
-      }
-      throw new BadRequestException('No se pudo crear la cita');
-    }
+    return await this.appointmentsService.create(createAppointmentDto);
   }
 
   @Get()
