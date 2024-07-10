@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Sex } from "@prisma/client";
 import { Type } from "class-transformer";
-import { IsDate, IsEmail, IsEnum, IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator";
+import { IsDate, IsEmail, IsEnum, IsOptional, IsString, IsUUID, Matches, MaxLength, MinLength } from "class-validator";
 
 export class CreatePatientDto {
 
@@ -48,4 +48,8 @@ export class CreatePatientDto {
   @IsString()
   bloodFactor: string;
 
+  @ApiProperty()
+  @IsString({ each: true })
+  @IsUUID()
+  roleId: string;
 }

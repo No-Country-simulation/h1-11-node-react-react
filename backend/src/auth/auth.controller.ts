@@ -18,8 +18,8 @@ export class AuthController {
   @ApiResponse({ status: 400, description: 'BadRequest' })
   @ApiResponse({ status: 403, description: 'Forbidden, Token' })
   @Post('register')
-  createUser(@Body() createPatientDto: CreatePatientDto) {
-    return this.authService.registerUser(createPatientDto);
+  createPatient(@Body() createPatientDto: CreatePatientDto) {
+    return this.authService.registerPatient(createPatientDto);
   }
 
   @ApiResponse({ status: 201, description: 'User was login', type: UserDto })

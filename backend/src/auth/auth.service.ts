@@ -29,11 +29,11 @@ export class AuthService extends PrismaClient implements OnModuleInit {
     return this.jwtService.sign(payload)
   }
 
-  async registerUser(createPatientDto: CreatePatientDto) {
-    const { password, email, ...patientData } = createPatientDto;
+  async registerPatient(createPatientDto: CreatePatientDto) {
+    const { password, email, bloodFactor, birthdate, roleId, ...patientData } = createPatientDto;
 
     try {
-      const patient = await this.patient.findUnique(
+      const patient = await this.user.findUnique(
         {
           where: {
             email
@@ -45,11 +45,22 @@ export class AuthService extends PrismaClient implements OnModuleInit {
         throw new BadRequestException('Email already exists')
       }
 
-      const newUser = await this.patient.create({
+      const newUser = await this.user.create({
         data: {
           ...patientData,
           email,
-          password: bcrypt.hashSync(password, 10)
+          password: bcrypt.hashSync(password, 10),
+          Patient: {
+            create: {
+               bloodFactor,
+               birthdate
+            }
+          },
+          roles: {
+            create : {
+              roleId
+            }
+          }
         }
       });
 
@@ -69,7 +80,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
   async login(loginUserDto: LoginUserDto) {
     const { password, email } = loginUserDto;
     try {
-      const user = await this.patient.findUnique({
+      const user = await this.user.findUnique({
         where: {
           email
         }
@@ -146,12 +157,12 @@ export class AuthService extends PrismaClient implements OnModuleInit {
       throw new InternalServerErrorException('Email not in token');
     }
 
-    const user = await this.patient.findUnique({ where: { email } })
+    const user = await this.user.findUnique({ where: { email } })
     if (!user) {
       throw new BadRequestException('User not found');
     }
 
-    await this.patient.update({
+    await this.user.update({
       where: { email },
       data: { isValidateEmail: true },
     });
