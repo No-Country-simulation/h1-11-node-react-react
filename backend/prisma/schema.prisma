@@ -20,10 +20,6 @@ enum Sex {
 
 model Patient {
   id          String    @id @default(uuid())
-  name        String
-  lastName    String
-  password    String
-  email       String    @unique
   birthdate   DateTime?
   dni         String    @unique
   sex         Sex
@@ -36,4 +32,19 @@ model Patient {
   updatedAt DateTime @updatedAt
 
   @@index([isActive])
+}
+
+model Role {
+  id   String @id @default(uuid())
+  name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  name        String
+  lastName    String
+  password    String
+  email       String    @unique
 }
