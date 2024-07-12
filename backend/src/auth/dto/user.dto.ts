@@ -9,7 +9,7 @@ export class User {
   name: string;
 
   @ApiProperty()
-  last_name: string;
+  lastName: string;
 
   @ApiProperty()
   email: string;

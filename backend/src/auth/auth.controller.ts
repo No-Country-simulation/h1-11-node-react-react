@@ -7,6 +7,7 @@ import { ValidRoles } from './interfaces';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dto/user.dto';
 import { Response } from 'express';
+import { CreateDoctorDto } from './dto/create-doctor.dto';
 
 
 @ApiTags('Auth')
@@ -14,12 +15,18 @@ import { Response } from 'express';
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-  @ApiResponse({ status: 201, description: 'User was created', type: UserDto })
+  @ApiResponse({ status: 201, description: 'patient was created', type: UserDto })
   @ApiResponse({ status: 400, description: 'BadRequest' })
-  @ApiResponse({ status: 403, description: 'Forbidden, Token' })
-  @Post('register')
+  @Post('register-patient')
   createPatient(@Body() createPatientDto: CreatePatientDto) {
     return this.authService.registerPatient(createPatientDto);
+  }
+
+  @ApiResponse({ status: 201, description: 'Doctor was created', type: CreateDoctorDto })
+  @ApiResponse({ status: 400, description: 'BadRequest' })
+  @Post('register-doctor')
+  createDoctor(@Body() createdoctorDto: CreateDoctorDto) {
+    return this.authService.registerDoctor(createdoctorDto);
   }
 
   @ApiResponse({ status: 201, description: 'User was login', type: UserDto })

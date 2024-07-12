@@ -6,6 +6,8 @@ import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
 import { EmailService } from 'src/email/email.service';
+import { CreateDoctorDto } from './dto/create-doctor.dto';
+import { generatePassword } from './utilities/utilities';
 
 
 @Injectable()
@@ -30,20 +32,41 @@ export class AuthService extends PrismaClient implements OnModuleInit {
   }
 
   async registerPatient(createPatientDto: CreatePatientDto) {
-    const { password, email, bloodFactor, birthdate, roleId, ...patientData } = createPatientDto;
+    const { email, bloodFactor, birthdate, doctorId, ...patientData } = createPatientDto;
 
     try {
-      const patient = await this.user.findUnique(
+      const patientemail = await this.user.findUnique(
         {
           where: {
             email
           }
         }
       )
-
-      if (patient) {
+      if (patientemail) {
         throw new BadRequestException('Email already exists')
       }
+
+      const patientDni = await this.user.findUnique(
+        {
+          where: {
+            dni: patientData.dni
+          }
+        }
+      )
+      if (patientDni) {
+        throw new BadRequestException('DNI already exists')
+      }
+
+      const roleId = await this.role.findFirst({
+        where: {
+          name: 'PATIENT'
+        },
+        select: {
+          id: true
+        }
+      })
+
+      const password = generatePassword();
 
       const newUser = await this.user.create({
         data: {
@@ -52,19 +75,26 @@ export class AuthService extends PrismaClient implements OnModuleInit {
           password: bcrypt.hashSync(password, 10),
           Patient: {
             create: {
-               bloodFactor,
-               birthdate
+              bloodFactor,
+              birthdate,
+              DoctorPatient: {
+                create: {
+                  doctorId
+                }
+              }
             }
           },
           roles: {
-            create : {
-              roleId
+            create: {
+              roleId: roleId.id
             }
           }
+
         }
       });
 
-      await this.sendEmailValidationLink(newUser.email);
+
+      await this.sendEmailValidationLink(newUser.email, password);
 
       const { password: _, ...userWithoutPassword } = newUser;
 
@@ -76,6 +106,77 @@ export class AuthService extends PrismaClient implements OnModuleInit {
       throw new BadRequestException(error.message)
     }
   }
+
+
+  async registerDoctor(createdoctorDto: CreateDoctorDto) {
+    const { email, especiality, license, ...doctorData } = createdoctorDto;
+
+    try {
+      const doctorEmail = await this.user.findUnique(
+        {
+          where: {
+            email
+          }
+        }
+      )
+      if (doctorEmail) {
+        throw new BadRequestException('Email already exists')
+      }
+
+      const doctorDni = await this.user.findUnique(
+        {
+          where: {
+            dni: doctorData.dni
+          }
+        }
+      )
+      if (doctorDni) {
+        throw new BadRequestException('DNI already exists')
+      }
+
+      const roleId = await this.role.findFirst({
+        where: {
+          name: 'DOCTOR'
+        },
+        select: {
+          id: true
+        }
+      })
+
+      const password = generatePassword();
+
+      const newUser = await this.user.create({
+        data: {
+          ...doctorData,
+          email,
+          password: bcrypt.hashSync(password, 10),
+          Doctor: {
+            create: {
+              especiality,
+              license
+            }
+          },
+          roles: {
+            create: {
+              roleId: roleId.id
+            }
+          }
+        }
+      });
+
+      await this.sendEmailValidationLink(newUser.email, password);
+
+      const { password: _, ...userWithoutPassword } = newUser;
+
+      return {
+        user: userWithoutPassword,
+        token: await this.signJWT({ id: newUser.id })
+      };
+    } catch (error) {
+      throw new BadRequestException(error.message)
+    }
+  }
+
 
   async login(loginUserDto: LoginUserDto) {
     const { password, email } = loginUserDto;
@@ -121,13 +222,15 @@ export class AuthService extends PrismaClient implements OnModuleInit {
     throw new InternalServerErrorException('Unexpected error, check server logs')
   }
 
-  private async sendEmailValidationLink(email: string) {
+  private async sendEmailValidationLink(email: string, password: string) {
+
     const token = this.jwtService.sign({ email });
     const link = `${process.env.WEBSERVICE_URL}/api/auth/validate/${token}`;
     const html = `
       <h1>Validate your email</h1>
       <p>Please click the following link to validate your email:</p>
       <a href="${link}">Validate your email</a>
+      <p>Password: ${password}</p>
     `;
 
     const options = {
@@ -169,4 +272,6 @@ export class AuthService extends PrismaClient implements OnModuleInit {
 
     return { success: true, message: 'Email successfully validated', email };
   }
+
+
 }
