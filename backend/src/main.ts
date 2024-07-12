@@ -18,8 +18,8 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('Institucion educativa')
-    .setDescription('API para institucion educativa')
+    .setTitle('Justina.io MVP')
+    .setDescription('API para MVP de Jutina.io')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);

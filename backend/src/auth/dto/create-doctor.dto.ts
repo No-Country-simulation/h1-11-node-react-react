@@ -3,7 +3,7 @@ import { Sex } from "@prisma/client";
 import { IsEmail, IsEnum, IsPhoneNumber, IsString, IsUUID, Matches, MaxLength, MinLength } from "class-validator";
 
 export class CreateDoctorDto {
-  @ApiProperty()
+  @ApiProperty({ description: 'Nombre del usuario',example: 'John' })
   @IsString()
   @MinLength(1)
   name: string;

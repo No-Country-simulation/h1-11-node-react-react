@@ -8,6 +8,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dto/user.dto';
 import { Response } from 'express';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
+import { UserWithTokenResponseDto } from './dto/response-create-patient';
 
 
 @ApiTags('Auth')
@@ -15,7 +16,7 @@ import { CreateDoctorDto } from './dto/create-doctor.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-  @ApiResponse({ status: 201, description: 'patient was created', type: UserDto })
+  @ApiResponse({ status: 201, description: 'patient was created', type: UserWithTokenResponseDto })
   @ApiResponse({ status: 400, description: 'BadRequest' })
   @Post('register-patient')
   createPatient(@Body() createPatientDto: CreatePatientDto) {
