@@ -1,11 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Sex } from "@prisma/client";
-import { Type } from "class-transformer";
-import { IsDate, IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString, IsUUID, Matches, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsEnum, IsPhoneNumber, IsString, IsUUID, Matches, MaxLength, MinLength } from "class-validator";
 
-export class CreatePatientDto {
-
-  @ApiProperty()
+export class CreateDoctorDto {
+  @ApiProperty({ description: 'Nombre del usuario',example: 'John' })
   @IsString()
   @MinLength(1)
   name: string;
@@ -14,6 +12,11 @@ export class CreatePatientDto {
   @IsString()
   @MinLength(1)
   lastName: string;
+
+  @ApiProperty()
+  @IsString()
+  @MinLength(1)
+  address: string;
 
   // @IsString()
   // @MinLength(6)
@@ -30,20 +33,9 @@ export class CreatePatientDto {
   email: string;
 
   @ApiProperty()
-  @IsDate()
-  @Type(() => Date)
-  @IsOptional()
-  birthdate: Date;
-
-  @ApiProperty()
   @IsString()
   @MinLength(8)
   dni: string;
-
-  @ApiProperty()
-  @IsString()
-  @MinLength(1)
-  address: string;
 
   @ApiProperty()
   @IsString()
@@ -62,8 +54,9 @@ export class CreatePatientDto {
   location: string;
 
   @ApiProperty()
-  @IsUUID()
-  doctorId: string;
+  @IsString()
+  @MinLength(1)
+  license: string;
 
   @ApiProperty({ enum: Sex, enumName: "Sex" })
   @IsEnum(Sex, { message: 'Sex must be either "M" or "F"' })
@@ -71,6 +64,6 @@ export class CreatePatientDto {
 
   @ApiProperty()
   @IsString()
-  bloodFactor: string;
-
+  @MinLength(1)
+  especiality: string;
 }

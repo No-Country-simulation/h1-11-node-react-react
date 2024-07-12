@@ -1,39 +1,48 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Sex } from "@prisma/client";
 
 
 export class User {
-  @ApiProperty()
-  id: string
+  @ApiProperty({ description: 'ID único del usuario' })
+  id: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Nombre del usuario' })
   name: string;
 
-  @ApiProperty()
-  last_name: string;
+  @ApiProperty({ description: 'Apellido del usuario' })
+  lastName: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Correo electrónico del usuario' })
   email: string;
 
-  @ApiProperty()
-  password: string;
-
-  @ApiProperty()
-  birthdate: Date | null;
+  @ApiProperty({ description: 'Número de DNI del usuario' })
   dni: string;
 
-  @ApiProperty()
-  role: string;
+  @ApiProperty({ description: 'Dirección del usuario' })
+  address: string;
 
-  @ApiProperty()
-  id_grade: string | null;
+  @ApiProperty({ description: 'Número de teléfono del usuario' })
+  phone: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Provincia del usuario' })
+  province: string;
+
+  @ApiProperty({ description: 'Ubicación del usuario' })
+  location: string;
+
+  @ApiProperty({ enum: Sex, description: 'Género del usuario (M, F)' })
+  sex: string;
+
+  @ApiProperty({ description: 'Indica si el correo electrónico del usuario está validado' })
+  isValidateEmail: boolean;
+
+  @ApiProperty({ description: 'Indica si el usuario está activo' })
   isActive: boolean;
 
-  @ApiProperty()
+  @ApiProperty({ type: Date, description: 'Fecha de creación del usuario' })
   createdAt: Date;
 
-  @ApiProperty()
+  @ApiProperty({ type: Date, description: 'Fecha de última actualización del usuario' })
   updatedAt: Date;
 }
 
@@ -42,8 +51,7 @@ export class UserDto {
   user: User;
 
   @ApiProperty()
-  token: string
-
+  token: string;
 }
 
 
