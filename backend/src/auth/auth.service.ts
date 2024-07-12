@@ -184,7 +184,11 @@ export class AuthService extends PrismaClient implements OnModuleInit {
       const user = await this.user.findUnique({
         where: {
           email
-        }
+        },
+        include: {
+          Patient: true,
+          Doctor: true,
+        },
       })
 
       if (!user) {

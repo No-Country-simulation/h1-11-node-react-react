@@ -1,14 +1,24 @@
 export function generatePassword(length: number = 12): string {
   const lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz';
-  const upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const digits = '0123456789';
-  const characters = lowerCaseLetters + upperCaseLetters + digits;
+    const upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const digits = '0123456789';
+    const allCharacters = lowerCaseLetters + upperCaseLetters + digits;
 
-  let password = '';
-  for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      password += characters[randomIndex];
-  }
+    const passwordCharacters: string[] = [
+        lowerCaseLetters[Math.floor(Math.random() * lowerCaseLetters.length)],
+        upperCaseLetters[Math.floor(Math.random() * upperCaseLetters.length)],
+        digits[Math.floor(Math.random() * digits.length)]
+    ];
 
-  return password;
+    for (let i = passwordCharacters.length; i < length; i++) {
+        const randomCharacter = allCharacters[Math.floor(Math.random() * allCharacters.length)];
+        passwordCharacters.push(randomCharacter);
+    }
+
+    for (let i = passwordCharacters.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [passwordCharacters[i], passwordCharacters[j]] = [passwordCharacters[j], passwordCharacters[i]];
+    }
+
+    return passwordCharacters.join('');
 }
