@@ -17,7 +17,7 @@ export class AppointmentsController {
   @ApiResponse({ status: 201, description: 'Cita médica agendada correctamente', type: CreateAppointmentDto })
   @ApiResponse({ status: 400, description: 'BadRequest' })
   @ApiResponse({ status: 403, description: 'Forbidden, Token' })
-  @Post()
+  @Post('register-appointment')
   async create(@Body() createAppointmentDto: CreateAppointmentDto) {
     return await this.appointmentsService.create(createAppointmentDto);
   }
@@ -60,7 +60,7 @@ export class AppointmentsController {
   @ApiResponse({ status: 201, description: 'Cita actualizada correctamente' })
   @ApiResponse({ status: 400, description: 'BadRequest' })
   @ApiResponse({ status: 403, description: 'Forbidden, Token' })
-  @Patch(':id')
+  @Patch('update-appointment/:id')
   async update(@Param('id') id: string, @Body() updateAppointmentDto: UpdateAppointmentDto) {
     try {
       return await this.appointmentsService.update(id, updateAppointmentDto);
@@ -83,7 +83,7 @@ export class AppointmentsController {
   @ApiResponse({ status: 201, description: 'Cita cancelada' })
   @ApiResponse({ status: 400, description: 'BadRequest' })
   @ApiResponse({ status: 403, description: 'Forbidden, Token' })
-  @Delete(':id')
+  @Delete('cancel-appointment/:id')
   async remove(@Param('id') id: string) {
     try {
       await this.appointmentsService.remove(id);
