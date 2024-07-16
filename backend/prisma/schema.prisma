@@ -68,7 +68,7 @@ model Patient {
   id          String    @id @default(uuid())
   birthdate   DateTime?
   bloodFactor String
-
+  appointments Appointment[]
   isActive Boolean @default(true)
 
   createdAt DateTime @default(now())
@@ -94,6 +94,7 @@ model Doctor {
   id          String @id @default(uuid())
   especiality String
   license     String
+  appointments Appointment[]
 
   isActive Boolean @default(true)
 
@@ -118,7 +119,9 @@ enum AppointmentState {
 
 model Appointment {
   id          String    @id @default(uuid())
+  patient     Patient   @relation(fields: [patientId], references: [id])
   patientId   String
+  doctor      Doctor    @relation(fields: [doctorId], references: [id])
   doctorId    String
   date        DateTime
   startTime   DateTime
