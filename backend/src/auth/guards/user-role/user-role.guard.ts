@@ -33,7 +33,10 @@ export class UserRoleGuard implements CanActivate {
     //     return true;
     //   }
     // }
-    if (validRoles.includes(user.role)) {
+
+
+
+    if (validRoles.includes(user.roles[0].role.name)) {
       return true;
     }
 

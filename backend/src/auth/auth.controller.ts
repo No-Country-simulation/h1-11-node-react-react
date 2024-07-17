@@ -4,7 +4,7 @@ import { CreatePatientDto, LoginUserDto } from './dto';
 
 import { Auth, GetUser } from './decorators';
 import { ValidRoles } from './interfaces';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiExcludeEndpoint, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dto/user.dto';
 import { Response } from 'express';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
@@ -18,9 +18,11 @@ export class AuthController {
 
   @ApiResponse({ status: 201, description: 'patient was created', type: UserWithTokenResponseDto })
   @ApiResponse({ status: 400, description: 'BadRequest' })
+  @ApiBearerAuth()
   @Post('register-patient')
-  createPatient(@Body() createPatientDto: CreatePatientDto) {
-    return this.authService.registerPatient(createPatientDto);
+  @Auth(ValidRoles.DOCTOR)
+  createPatient(@Body() createPatientDto: CreatePatientDto, @GetUser() user) {
+    return this.authService.registerPatient(createPatientDto, user);
   }
 
   @ApiResponse({ status: 201, description: 'Doctor was created', type: CreateDoctorDto })
@@ -41,6 +43,7 @@ export class AuthController {
   @ApiResponse({ status: 201, description: 'User was check-status and revalidate token', type: UserDto })
   @ApiResponse({ status: 400, description: 'BadRequest' })
   @ApiResponse({ status: 403, description: 'Forbidden, Token' })
+  @ApiExcludeEndpoint()
   @Get('check-status')
   @Auth()
   checkAuthStatus(
@@ -103,7 +106,7 @@ export class AuthController {
   //     id,
   //     user
   //   }
-  //   // return this.authService.findOne(+id);
+  //   return this.authService.findOne(+id);
   // }
 
 
