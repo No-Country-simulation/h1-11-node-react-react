@@ -61,10 +61,6 @@ export class CreatePatientDto {
   @MinLength(1)
   location: string;
 
-  @ApiProperty()
-  @IsUUID()
-  doctorId: string;
-
   @ApiProperty({ enum: Sex, enumName: "Sex" })
   @IsEnum(Sex, { message: 'Sex must be either "M" or "F"' })
   sex: Sex;

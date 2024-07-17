@@ -31,8 +31,8 @@ export class AuthService extends PrismaClient implements OnModuleInit {
     return this.jwtService.sign(payload)
   }
 
-  async registerPatient(createPatientDto: CreatePatientDto) {
-    const { email, bloodFactor, birthdate, doctorId, ...patientData } = createPatientDto;
+  async registerPatient(createPatientDto: CreatePatientDto, user) {
+    const { email, bloodFactor, birthdate, ...patientData } = createPatientDto;
 
     try {
       const patientemail = await this.user.findUnique(
@@ -57,7 +57,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
         throw new BadRequestException('DNI already exists')
       }
 
-      const roleId = await this.role.findFirst({
+      let roleId = await this.role.findFirst({
         where: {
           name: 'PATIENT'
         },
@@ -66,7 +66,21 @@ export class AuthService extends PrismaClient implements OnModuleInit {
         }
       })
 
+      if (!roleId) {
+        const role = await this.role.create({
+          data: {
+            name: 'PATIENT'
+          }
+        })
+        roleId = { id: role.id };
+      } else {
+        roleId = { id: roleId.id };
+      }
+
       const password = generatePassword();
+
+      console.log(user.Doctor.id);
+
 
       const newUser = await this.user.create({
         data: {
@@ -79,7 +93,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
               birthdate,
               DoctorPatient: {
                 create: {
-                  doctorId
+                  doctorId: user.Doctor.id
                 }
               }
             }
@@ -134,7 +148,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
         throw new BadRequestException('DNI already exists')
       }
 
-      const roleId = await this.role.findFirst({
+      let roleId = await this.role.findFirst({
         where: {
           name: 'DOCTOR'
         },
@@ -142,6 +156,18 @@ export class AuthService extends PrismaClient implements OnModuleInit {
           id: true
         }
       })
+
+
+      if (!roleId) {
+        const role = await this.role.create({
+          data: {
+            name: 'DOCTOR'
+          }
+        })
+        roleId = { id: role.id };
+      } else {
+        roleId = { id: roleId.id };
+      }
 
       const password = generatePassword();
 
@@ -276,6 +302,4 @@ export class AuthService extends PrismaClient implements OnModuleInit {
 
     return { success: true, message: 'Email successfully validated', email };
   }
-
-
 }
