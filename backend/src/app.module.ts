@@ -5,9 +5,10 @@ import { EmailModule } from './email/email.module';
 
 import { AppointmentsModule } from './appointments/appointments.module';
 import { RoleModule } from './role/role.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [AuthModule, EmailModule, AppointmentsModule, RoleModule],
+  imports: [AuthModule, EmailModule, AppointmentsModule, RoleModule, UsersModule],
   providers: [EmailService],
 })
 export class AppModule {}
