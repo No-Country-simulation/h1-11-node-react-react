@@ -7,14 +7,20 @@ interface EnvVars {
   PORT: number
   DATABASE_URL: string
   JWT_SECRET: string
+  MAILER_SERVICE: string
+  MAILER_EMAIL: string
+  MAILER_SECRET_KEY: string
 }
 
 const envsSchema = joi.object({
   PORT: joi.number().required(),
   DATABASE_URL: joi.string().required(),
   JWT_SECRET: joi.string().required(),
+  MAILER_SERVICE: joi.string().required(),
+  MAILER_EMAIL: joi.string().required(),
+  MAILER_SECRET_KEY: joi.string().required(),
 })
-.unknown(true);
+  .unknown(true);
 
 const { error, value } = envsSchema.validate(process.env);
 
@@ -29,6 +35,9 @@ export const envs = {
   port: envVars.PORT,
   databaseUrl: envVars.DATABASE_URL,
   jwtSecret: envVars.JWT_SECRET,
+  mailerService: envVars.MAILER_SERVICE,
+  mailerEmail: envVars.MAILER_EMAIL,
+  mailerSecretKey: envVars.MAILER_SECRET_KEY,
 }
 
 

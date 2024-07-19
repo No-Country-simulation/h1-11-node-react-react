@@ -26,17 +26,24 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
+
   app.enableCors({
-    origin: (origin, callback) => {
-      // Permitir solicitudes desde Vercel, localhost y orígenes nulos (Postman)
-      if (!origin || origin === 'https://mi-campus.vercel.app' || /localhost:\d+$/.test(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization']
   });
+
+  // app.enableCors({
+  //   origin: (origin, callback) => {
+  //     // Permitir solicitudes desde Vercel, localhost y orígenes nulos (Postman)
+  //     if (!origin || origin === 'https://mi-campus.vercel.app' || /localhost:\d+$/.test(origin)) {
+  //       callback(null, true);
+  //     } else {
+  //       callback(new Error('Not allowed by CORS'));
+  //     }
+  //   },
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  // });
 
   // https://mi-campus.vercel.app/
 

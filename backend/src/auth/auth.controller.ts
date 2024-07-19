@@ -9,6 +9,9 @@ import { UserDto } from './dto/user.dto';
 import { Response } from 'express';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UserWithTokenResponseDto } from './dto/response-create-patient';
+import { ResetPassword } from './dto/reset-password.dto';
+import { string } from 'joi';
+import { PasswordResetResponseDto } from './dto/response-reset-password.dto';
 
 
 @ApiTags('Auth')
@@ -52,6 +55,17 @@ export class AuthController {
     return this.authService.checkAuthStatus(user);
   }
 
+  @ApiResponse({ status: 200, description: 'Password was reset', type: PasswordResetResponseDto })
+  @ApiResponse({ status: 400, description: 'BadRequest' })
+  @ApiResponse({ status: 403, description: 'Forbidden, Token' })
+  @ApiBearerAuth()
+  @Post('reset-password')
+  @Auth(ValidRoles.DOCTOR, ValidRoles.PATIENT)
+  resetPassword(@Body() resetPassword: ResetPassword, @GetUser() user) {
+    return this.authService.resetPassword(resetPassword, user);
+  }
+
+  @ApiExcludeEndpoint()
   @Get('validate/:token')
   async validateEmail(@Param('token') token: string, @Res() res: Response) {
     const result = await this.authService.validateEmail(token);
