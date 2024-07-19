@@ -2,8 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ConflictExcep
 import { AppointmentsService } from './appointments.service';
 import { AppointmentState, CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { GetUser } from 'src/auth/decorators/get-user.decorator';
+import { ApiQuery, ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Appointments')
 @Controller('appointments')
@@ -18,6 +17,7 @@ export class AppointmentsController {
   @ApiResponse({ status: 201, description: 'Cita médica agendada correctamente', type: CreateAppointmentDto })
   @ApiResponse({ status: 400, description: 'BadRequest' })
   @ApiResponse({ status: 403, description: 'Forbidden, Token' })
+  @ApiBearerAuth()
   @Post('register-appointment')
   async create(@Body() createAppointmentDto: CreateAppointmentDto) {
     return await this.appointmentsService.create(createAppointmentDto);
@@ -33,6 +33,11 @@ export class AppointmentsController {
   @ApiResponse({ status: 403, description: 'Forbidden, Token' })
   @ApiBearerAuth()
   @Get()
+  @ApiQuery({
+    name: 'state',
+    type: String,
+    required: false,
+  })
   findAll(@Query('state') state?: AppointmentState,  user? : any) {
     return this.appointmentsService.findAll(state,user);
   }
@@ -45,6 +50,7 @@ export class AppointmentsController {
   @ApiResponse({ status: 201, description: 'Cita encontrada' })
   @ApiResponse({ status: 400, description: 'BadRequest' })
   @ApiResponse({ status: 403, description: 'Forbidden, Token' })
+  @ApiBearerAuth()
   @Get(':id')
   findOne(@Param('id') id: string) {
     const appointment =  this.appointmentsService.findOne(id);
@@ -62,6 +68,7 @@ export class AppointmentsController {
   @ApiResponse({ status: 201, description: 'Cita actualizada correctamente' })
   @ApiResponse({ status: 400, description: 'BadRequest' })
   @ApiResponse({ status: 403, description: 'Forbidden, Token' })
+  @ApiBearerAuth()
   @Patch('update-appointment/:id')
   async update(@Param('id') id: string, @Body() updateAppointmentDto: UpdateAppointmentDto) {
     try {
@@ -85,6 +92,7 @@ export class AppointmentsController {
   @ApiResponse({ status: 201, description: 'Cita cancelada' })
   @ApiResponse({ status: 400, description: 'BadRequest' })
   @ApiResponse({ status: 403, description: 'Forbidden, Token' })
+  @ApiBearerAuth()
   @Delete('cancel-appointment/:id')
   async remove(@Param('id') id: string) {
     try {
