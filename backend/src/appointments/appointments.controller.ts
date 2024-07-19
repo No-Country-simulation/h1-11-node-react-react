@@ -2,7 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ConflictExcep
 import { AppointmentsService } from './appointments.service';
 import { AppointmentState, CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { GetUser } from 'src/auth/decorators/get-user.decorator';
 
 @ApiTags('Appointments')
 @Controller('appointments')
@@ -30,9 +31,10 @@ export class AppointmentsController {
   @ApiResponse({ status: 201, description: 'Lista de citas o turnos programados' })
   @ApiResponse({ status: 400, description: 'BadRequest' })
   @ApiResponse({ status: 403, description: 'Forbidden, Token' })
+  @ApiBearerAuth()
   @Get()
-  async findAll(@Query('state') state?: AppointmentState) {
-    return await this.appointmentsService.findAll(state);
+  findAll(@Query('state') state?: AppointmentState,  user? : any) {
+    return this.appointmentsService.findAll(state,user);
   }
 
   @ApiOperation({

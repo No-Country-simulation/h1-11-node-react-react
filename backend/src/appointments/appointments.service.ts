@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit, Logger, BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import { AppointmentState, CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
-import { Appointment, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class AppointmentsService extends PrismaClient implements OnModuleInit {
@@ -11,7 +11,7 @@ export class AppointmentsService extends PrismaClient implements OnModuleInit {
     this.$connect();
     this.logger.log('Appointments Service connected to database')
   }
-  async create(createAppointmentDto: CreateAppointmentDto): Promise<Appointment> {
+  async create(createAppointmentDto: CreateAppointmentDto){
     const { patientId, doctorId, ...appointmentData } = createAppointmentDto;
     try {
       const overlappingAppointments = await this.findOverlappingAppointments(
@@ -36,44 +36,85 @@ export class AppointmentsService extends PrismaClient implements OnModuleInit {
     }
   }
 
-  async findAll(state?: AppointmentState,patientId: string) {
+  async findAll(state?: AppointmentState, user?:  string) {
+
     const where = state ? { state } : {isActive: true};
     return this.appointment.findMany({
-      where: {
-        patientId: patientId
-      },
+      where,
       select: {
         id: true,
         date: true,
-        patientId: true,
-        doctorId: true,
+        startTime: true,
+        endTime: true,
+        description: true,
+        state: true,
+        isActive: true,
+        createdAt: true,
         patient: {
           select: {
-            userId: true,
+            id: true,
             user: {
               select: {
-                name: true
+                id: true,
+                name: true,
+                lastName: true
               }
             }
           }
         },
         doctor: {
           select: {
-            userId: true,
+            id: true,
             user: {
               select: {
-                name: true
+                id: true,
+                name: true,
+                lastName: true
               }
             }
           }
         }
-      },}
-    );
+      }
+    });
   }
 
   findOne(id: string) {
     return this.appointment.findUnique({
       where: { id },
+      select: {
+        id: true,
+        date: true,
+        startTime: true,
+        endTime: true,
+        description: true,
+        state: true,
+        isActive: true,
+        createdAt: true,
+        patient: {
+          select: {
+            id: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                lastName: true
+              }
+            }
+          }
+        },
+        doctor: {
+          select: {
+            id: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                lastName: true
+              }
+            }
+          }
+        }
+      }
     });
   }
 
