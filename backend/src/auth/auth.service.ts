@@ -8,6 +8,7 @@ import { PrismaClient } from '@prisma/client';
 import { EmailService } from 'src/email/email.service';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { generatePassword } from './utilities/utilities';
+import { ResetPassword } from './dto/reset-password.dto';
 
 
 @Injectable()
@@ -187,6 +188,9 @@ export class AuthService extends PrismaClient implements OnModuleInit {
               roleId: roleId.id
             }
           }
+        },
+        include: {
+          Doctor: true
         }
       });
 
@@ -227,9 +231,11 @@ export class AuthService extends PrismaClient implements OnModuleInit {
         throw new BadRequestException('Password not valid')
       }
 
-      const { password: _, ...userWithoutPassword } = user;
+      const { password: _, Patient, Doctor, ...userWithoutPassword } = user;
       return {
         user: userWithoutPassword,
+        Patient,
+        Doctor,
         token: await this.signJWT({ id: user.id })
       };
 
@@ -269,7 +275,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
       html,
     };
 
-    const isSent = await this.emailService.sendEmail(options);
+    const isSent: boolean = await this.emailService.sendEmail(options);
     if (!isSent) {
       throw new InternalServerErrorException('Error sending email');
     }
@@ -301,5 +307,24 @@ export class AuthService extends PrismaClient implements OnModuleInit {
     });
 
     return { success: true, message: 'Email successfully validated', email };
+  }
+
+
+  async resetPassword(resetPassword: ResetPassword, user) {
+    const { password, confirmPassword } = resetPassword;
+
+    if (password !== confirmPassword) {
+      throw new BadRequestException('Passwords do not match');
+    }
+
+    const userFromNewPassword = await this.user.update({
+      where: { id: user.id },
+      data: { password: bcrypt.hashSync(password, 10),
+        isValidateEmail: true
+      },
+
+    })
+
+    return { message: 'contraseña cambiada' };
   }
 }
