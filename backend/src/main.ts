@@ -21,9 +21,11 @@ async function bootstrap() {
     .setTitle('Justina.io MVP')
     .setDescription('API para MVP de Jutina.io')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
 
   app.enableCors({
     origin: (origin, callback) => {
@@ -35,9 +37,8 @@ async function bootstrap() {
       }
     },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: ['Content-Type', 'Authorization']
   });
-
-  // https://mi-campus.vercel.app/
 
   await app.listen(envs.port);
 

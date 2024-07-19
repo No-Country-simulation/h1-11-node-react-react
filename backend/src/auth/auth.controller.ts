@@ -4,11 +4,14 @@ import { CreatePatientDto, LoginUserDto } from './dto';
 
 import { Auth, GetUser } from './decorators';
 import { ValidRoles } from './interfaces';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiExcludeEndpoint, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from './dto/user.dto';
 import { Response } from 'express';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UserWithTokenResponseDto } from './dto/response-create-patient';
+import { ResetPassword } from './dto/reset-password.dto';
+import { string } from 'joi';
+import { PasswordResetResponseDto } from './dto/response-reset-password.dto';
 
 
 @ApiTags('Auth')
@@ -18,9 +21,11 @@ export class AuthController {
 
   @ApiResponse({ status: 201, description: 'patient was created', type: UserWithTokenResponseDto })
   @ApiResponse({ status: 400, description: 'BadRequest' })
+  @ApiBearerAuth()
   @Post('register-patient')
-  createPatient(@Body() createPatientDto: CreatePatientDto) {
-    return this.authService.registerPatient(createPatientDto);
+  @Auth(ValidRoles.DOCTOR)
+  createPatient(@Body() createPatientDto: CreatePatientDto, @GetUser() user) {
+    return this.authService.registerPatient(createPatientDto, user);
   }
 
   @ApiResponse({ status: 201, description: 'Doctor was created', type: CreateDoctorDto })
@@ -41,6 +46,7 @@ export class AuthController {
   @ApiResponse({ status: 201, description: 'User was check-status and revalidate token', type: UserDto })
   @ApiResponse({ status: 400, description: 'BadRequest' })
   @ApiResponse({ status: 403, description: 'Forbidden, Token' })
+  @ApiExcludeEndpoint()
   @Get('check-status')
   @Auth()
   checkAuthStatus(
@@ -49,6 +55,17 @@ export class AuthController {
     return this.authService.checkAuthStatus(user);
   }
 
+  @ApiResponse({ status: 200, description: 'Password was reset', type: PasswordResetResponseDto })
+  @ApiResponse({ status: 400, description: 'BadRequest' })
+  @ApiResponse({ status: 403, description: 'Forbidden, Token' })
+  @ApiBearerAuth()
+  @Post('reset-password')
+  @Auth(ValidRoles.DOCTOR, ValidRoles.PATIENT)
+  resetPassword(@Body() resetPassword: ResetPassword, @GetUser() user) {
+    return this.authService.resetPassword(resetPassword, user);
+  }
+
+  @ApiExcludeEndpoint()
   @Get('validate/:token')
   async validateEmail(@Param('token') token: string, @Res() res: Response) {
     const result = await this.authService.validateEmail(token);
@@ -103,7 +120,7 @@ export class AuthController {
   //     id,
   //     user
   //   }
-  //   // return this.authService.findOne(+id);
+  //   return this.authService.findOne(+id);
   // }
 
 

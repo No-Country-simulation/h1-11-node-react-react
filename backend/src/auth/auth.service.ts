@@ -8,6 +8,7 @@ import { PrismaClient } from '@prisma/client';
 import { EmailService } from 'src/email/email.service';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { generatePassword } from './utilities/utilities';
+import { ResetPassword } from './dto/reset-password.dto';
 
 
 @Injectable()
@@ -31,8 +32,8 @@ export class AuthService extends PrismaClient implements OnModuleInit {
     return this.jwtService.sign(payload)
   }
 
-  async registerPatient(createPatientDto: CreatePatientDto) {
-    const { email, bloodFactor, birthdate, doctorId, ...patientData } = createPatientDto;
+  async registerPatient(createPatientDto: CreatePatientDto, user) {
+    const { email, bloodFactor, birthdate, ...patientData } = createPatientDto;
 
     try {
       const patientemail = await this.user.findUnique(
@@ -57,7 +58,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
         throw new BadRequestException('DNI already exists')
       }
 
-      const roleId = await this.role.findFirst({
+      let roleId = await this.role.findFirst({
         where: {
           name: 'PATIENT'
         },
@@ -66,7 +67,21 @@ export class AuthService extends PrismaClient implements OnModuleInit {
         }
       })
 
+      if (!roleId) {
+        const role = await this.role.create({
+          data: {
+            name: 'PATIENT'
+          }
+        })
+        roleId = { id: role.id };
+      } else {
+        roleId = { id: roleId.id };
+      }
+
       const password = generatePassword();
+
+      console.log(user.Doctor.id);
+
 
       const newUser = await this.user.create({
         data: {
@@ -79,7 +94,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
               birthdate,
               DoctorPatient: {
                 create: {
-                  doctorId
+                  doctorId: user.Doctor.id
                 }
               }
             }
@@ -134,7 +149,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
         throw new BadRequestException('DNI already exists')
       }
 
-      const roleId = await this.role.findFirst({
+      let roleId = await this.role.findFirst({
         where: {
           name: 'DOCTOR'
         },
@@ -142,6 +157,18 @@ export class AuthService extends PrismaClient implements OnModuleInit {
           id: true
         }
       })
+
+
+      if (!roleId) {
+        const role = await this.role.create({
+          data: {
+            name: 'DOCTOR'
+          }
+        })
+        roleId = { id: role.id };
+      } else {
+        roleId = { id: roleId.id };
+      }
 
       const password = generatePassword();
 
@@ -161,6 +188,9 @@ export class AuthService extends PrismaClient implements OnModuleInit {
               roleId: roleId.id
             }
           }
+        },
+        include: {
+          Doctor: true
         }
       });
 
@@ -201,9 +231,11 @@ export class AuthService extends PrismaClient implements OnModuleInit {
         throw new BadRequestException('Password not valid')
       }
 
-      const { password: _, ...userWithoutPassword } = user;
+      const { password: _, Patient, Doctor, ...userWithoutPassword } = user;
       return {
         user: userWithoutPassword,
+        Patient,
+        Doctor,
         token: await this.signJWT({ id: user.id })
       };
 
@@ -243,7 +275,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
       html,
     };
 
-    const isSent = await this.emailService.sendEmail(options);
+    const isSent: boolean = await this.emailService.sendEmail(options);
     if (!isSent) {
       throw new InternalServerErrorException('Error sending email');
     }
@@ -278,4 +310,21 @@ export class AuthService extends PrismaClient implements OnModuleInit {
   }
 
 
+  async resetPassword(resetPassword: ResetPassword, user) {
+    const { password, confirmPassword } = resetPassword;
+
+    if (password !== confirmPassword) {
+      throw new BadRequestException('Passwords do not match');
+    }
+
+    const userFromNewPassword = await this.user.update({
+      where: { id: user.id },
+      data: { password: bcrypt.hashSync(password, 10),
+        isValidateEmail: true
+      },
+
+    })
+
+    return { message: 'contraseña cambiada' };
+  }
 }

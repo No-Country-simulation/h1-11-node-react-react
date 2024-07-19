@@ -33,7 +33,16 @@ export class JwtStrategy extends PrismaClientMixin(PassportStrategy(Strategy)) i
 
   async validate(payload: JwtPayload) {
     const { id } = payload;
-    const user = await this.prisma.patient.findUnique({ where: { id } });
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      include: {
+        Patient: true, Doctor: true, roles: {
+          include: {
+            role: true
+          }
+        }
+      },
+    });
 
     if (!user) throw new UnauthorizedException('Token not valid');
     if (!user.isActive) throw new UnauthorizedException('User is inactive, talk with an admin');
