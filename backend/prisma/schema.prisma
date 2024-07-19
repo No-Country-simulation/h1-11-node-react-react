@@ -136,3 +136,9 @@ model Appointment {
   @@index([patientId, doctorId, date])
   @@unique([date, startTime, endTime])
 }
+
+model Organization {
+  id          String @id @default(uuid())
+  name        String
+  email       String
+}
