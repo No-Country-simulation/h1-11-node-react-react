@@ -142,3 +142,15 @@ model Organization {
   name        String
   email       String
 }
+
+enum LaboratoryType {
+  MEDICINA
+  ANALISIS
+}
+
+model Laboratory {
+  id          String @id @default(uuid())
+  contactName String
+  type        LaboratoryType
+  isActive    Boolean @default(true)
+}
