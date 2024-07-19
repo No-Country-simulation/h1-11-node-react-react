@@ -1,4 +1,3 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 
 const LoginForm = () => {
@@ -9,18 +8,15 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex flex-col items-center justify-center w-full mb-16 gap-6 " onSubmit={handleSubmit(onSubmit)}>
       <div>
-        <label htmlFor="DNI">Username</label>
         <input
-          id="DNI"
-          {...register('DNI', { required: true })}
+          {...register('Mail', { required: true })}
         />
         {errors.username && <span>This field is required</span>}
       </div>
-      
+
       <div>
-        <label htmlFor="password">Password</label>
         <input
           id="password"
           type="password"
@@ -28,7 +24,7 @@ const LoginForm = () => {
         />
         {errors.password && <span>This field is required</span>}
       </div>
-      
+
       <button type="submit">Login</button>
     </form>
   );

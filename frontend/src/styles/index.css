@@ -1,3 +1,4 @@
+@import "./normalize.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,9 +8,18 @@
   line-height: 1.5;
   font-weight: 400;
 
+  min-width: 98vw;
+  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: #080808;
+  background-color: #f5f5f5;
+
+  --clr-fondo: #f5f5f5;
+  --clr-texto: #080808;
+  --clr-primario: #c61064;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -17,27 +27,26 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
-}
-
 body {
   margin: 0;
+  padding: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  width: 100%;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+input {
+  background-color: var(--clr-fondo);
+  border-radius: 5px;
+  min-width: 300px;
+  border: 2px solid #080808;
+  border-bottom-color: var(--clr-texto);
+  border-color: var(--clr-texto);
 }
 
 button {
@@ -47,7 +56,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--clr-primario);
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -63,12 +72,8 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
+    color: var(--clr-texto);
     background-color: #ffffff;
-  }
-
-  a:hover {
-    color: #747bff;
   }
 
   button {
