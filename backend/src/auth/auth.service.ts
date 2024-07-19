@@ -157,7 +157,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
           id: true
         }
       })
-
+//g
 
       if (!roleId) {
         const role = await this.role.create({
