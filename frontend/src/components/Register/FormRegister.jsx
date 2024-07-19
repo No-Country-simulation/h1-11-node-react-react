@@ -44,10 +44,10 @@ export default function FormRegister() {
       lastName: data.lastName,
       email: data.email,
       password: data.password,
-      birthdate:data.birthdate,
+      birthdate: data.birthdate,
       dni: data.dni,
       sex: data.sex,
-      bloodFactor:data.bloodFactor,
+      bloodFactor: data.bloodFactor,
     });
     console.log(data);
     reset();
@@ -59,29 +59,29 @@ export default function FormRegister() {
       className="flex flex-col items-center justify-center w-full mb-16 text-blue"
     >
 
-       {/* {-----------------------------------------------------------------------------------------------------------} */}
+      {/* {-----------------------------------------------------------------------------------------------------------} */}
       <label htmlFor="name">Nombres</label>
       <div className="w-full input-container">
         <input
-        {...register('name', {
-          required: {
-            value: true,
-            message: 'El nombre de la empresa es obligatorio.'
-          },
-          minLength: {
-            value: 2,
-            message: 'El nombre de la empresa no es válido.'
-          },
-          maxLength: {
-            value: 50,
-            message: 'El nombre de la empresa no es válido.'
-          }
-        })}
+          {...register('name', {
+            required: {
+              value: true,
+              message: 'El nombre de la empresa es obligatorio.'
+            },
+            minLength: {
+              value: 2,
+              message: 'El nombre de la empresa no es válido.'
+            },
+            maxLength: {
+              value: 50,
+              message: 'El nombre de la empresa no es válido.'
+            }
+          })}
           // placeholder={selected == 'name' ? '' : 'Nombre de la empresa...'}
-        className="w-full textField" type="text" id="name" name="name" />
+          className="w-full textField" type="text" id="name" name="name" />
       </div>
 
-       {/* {-----------------------------------------------------------------------------------------------------------} */}
+      {/* {-----------------------------------------------------------------------------------------------------------} */}
 
       <label htmlFor="lastName">Apellidos</label>
       <div className="w-full input-container">
@@ -117,7 +117,7 @@ export default function FormRegister() {
               value: true,
               message: 'El nombre de la empresa es obligatorio.'
             }
-           
+
           })}
           className="w-full textField"
           type="text"
@@ -126,12 +126,12 @@ export default function FormRegister() {
         />
       </div>
 
-       {/* {-----------------------------------------------------------------------------------------------------------} */}
+      {/* {-----------------------------------------------------------------------------------------------------------} */}
 
       <label htmlFor="email">Correo electronico</label>
       <div className="w-full input-container">
         <input
-           {...register('email', {
+          {...register('email', {
             required: {
               value: true,
               message: 'El correo electrónico es obligatorio'
@@ -144,17 +144,17 @@ export default function FormRegister() {
         />
       </div>
 
-       {/* {-----------------------------------------------------------------------------------------------------------} */}
- 
+      {/* {-----------------------------------------------------------------------------------------------------------} */}
+
       <label htmlFor="dni">DNI</label>
       <div className="w-full input-container">
         <input
-         {...register('dni', {
-          required: {
-            value: true,
-            message: 'El correo electrónico es obligatorio'
-          }
-        })}
+          {...register('dni', {
+            required: {
+              value: true,
+              message: 'El DNI es obligatorio'
+            }
+          })}
           className="w-full textField"
           type="number"
           id="dni"
@@ -162,44 +162,44 @@ export default function FormRegister() {
         />
       </div>
 
-       {/* {-----------------------------------------------------------------------------------------------------------} */}
+      {/* {-----------------------------------------------------------------------------------------------------------} */}
       <label htmlFor="birthdate">Birthdate</label>
       <div className="w-full input-container">
         <input
-         {...register('birthdate', {
-          required: {
-            value: true,
-            message: 'El correo electrónico es obligatorio'
-          }
-        })}
-         className="w-full textField" type="number" id="birthdate" name="birthdate" />
+          {...register('birthdate', {
+            required: {
+              value: true,
+              message: 'El correo electrónico es obligatorio'
+            }
+          })}
+          className="w-full textField" type="number" id="birthdate" name="birthdate" />
       </div>
-       {/* {-----------------------------------------------------------------------------------------------------------} */}
-       <label htmlFor="BloodFactor">BloodFactor</label>
+      {/* {-----------------------------------------------------------------------------------------------------------} */}
+      <label htmlFor="BloodFactor">BloodFactor</label>
       <div className="w-full input-container">
-        <input 
+        <input
           {...register('bloodFactor', {
             required: {
               value: true,
               message: 'El correo electrónico es obligatorio'
             }
-          })} 
+          })}
           className="w-full textField" type="text" id="bloodFactor" name="bloodFactor" />
       </div>
-       {/* {-----------------------------------------------------------------------------------------------------------} */}
+      {/* {-----------------------------------------------------------------------------------------------------------} */}
 
       <label htmlFor="password">Contraseña</label>
       <div className="w-full input-container">
         <input
-       
-        
-        {...register('password', {
-          required: {
-            value: true,
-            message: 'La contraseña es obligatoria'
-          },
-         
-        })}className="w-full textField" type="password" id="password" />
+
+
+          {...register('password', {
+            required: {
+              value: true,
+              message: 'La contraseña es obligatoria'
+            },
+
+          })} className="w-full textField" type="password" id="password" />
       </div>
 
       {/* <label htmlFor="password">Confirmar contraseña</label>
