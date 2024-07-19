@@ -28,24 +28,17 @@ async function bootstrap() {
 
 
   app.enableCors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    origin: (origin, callback) => {
+      // Permitir solicitudes desde Vercel, localhost y orígenes nulos (Postman)
+      if (!origin || origin === '*' || /localhost:\d+$/.test(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: ['Content-Type', 'Authorization']
   });
-
-  // app.enableCors({
-  //   origin: (origin, callback) => {
-  //     // Permitir solicitudes desde Vercel, localhost y orígenes nulos (Postman)
-  //     if (!origin || origin === 'https://mi-campus.vercel.app' || /localhost:\d+$/.test(origin)) {
-  //       callback(null, true);
-  //     } else {
-  //       callback(new Error('Not allowed by CORS'));
-  //     }
-  //   },
-  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  // });
-
-  // https://mi-campus.vercel.app/
 
   await app.listen(envs.port);
 
