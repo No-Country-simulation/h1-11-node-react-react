@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 // import { useNavigate } from 'react-router-dom'
 
 // import { pageApi } from '../api/PageApi'
-import { onChecking } from '../store/auth/authSlice'
+import { onChecking, onLogin } from '../store/auth/authSlice'
 import axios from 'axios'
 
 export const useAuthStore = () => {
@@ -15,7 +15,7 @@ export const useAuthStore = () => {
 
 
   const startRegister = async User => {
-    dispatch(onChecking())
+    dispatch(onChecking());
     try {
       const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register-doctor`, {
 
@@ -43,16 +43,26 @@ export const useAuthStore = () => {
     }
   }
 
-
+  const startLogin = async User => {
+    dispatch(onChecking())
+    try {
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, { ...User, });
+      if (data) {
+        console.log(data);
+        dispatch(onLogin(data))
+      }
+    } catch (error) {
+      console.log('Error de autenticación', error.message);
+      console.log(errorMessage);
+    }
+  }
 
   return {
     status,
     user,
     errorMessage,
-
     startRegister,
-
-
+    startLogin,
   }
 }
 
