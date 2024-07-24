@@ -20,7 +20,7 @@
   --clr-fondo: #f5f5f5;
   --clr-texto: #080808;
   --clr-primario: #c61064;
-
+  --clr-emoticon: #717171;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -41,21 +41,24 @@ h1 {
 }
 
 input {
+  padding-left: 15px;
   background-color: var(--clr-fondo);
-  border-radius: 5px;
+  border-radius: 15px;
   min-width: 300px;
-  border: 2px solid #080808;
-  border-bottom-color: var(--clr-texto);
-  border-color: var(--clr-texto);
+  height: 50px;
+  border: 1px solid #717171;
 }
 
 button {
-  border-radius: 8px;
+  border-radius: 15px;
   border: 1px solid transparent;
+  width: 190px;
+  height: 50px;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
+  color: var(--clr-fondo);
   background-color: var(--clr-primario);
   cursor: pointer;
   transition: border-color 0.25s;

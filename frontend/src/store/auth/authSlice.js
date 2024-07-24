@@ -7,22 +7,26 @@ export const authSlice = createSlice({
     initialState: {
         status: 'checking', // 'authenticated', 'not-authenticated',
         user: {},
+        token: undefined,
         errorMessage: undefined,
     },
     reducers: {
         onChecking: (state) => {
             state.status = 'checking';
             state.user = {};
+            state.token = undefined;
             state.errorMessage = undefined;
         },
         onLogin: (state, { payload }) => {
             state.status = 'authenticated';
-            state.user = payload;
+            state.user = payload.user;
+            state.token = payload.token;
             state.errorMessage = undefined;
         },
         onLogout: (state, { payload }) => {
             state.status = 'not-authenticated';
             state.user = {};
+            state.token = undefined;
             state.errorMessage = payload;
         },
         clearErrorMessage: (state) => {
@@ -36,10 +40,10 @@ const authPersistConfig = {
     key: 'auth',
     storage: storage,
     blacklist: [], // Puedes excluir ciertos campos si es necesario
-  };
-  
-  const persistedAuthReducer = persistReducer(authPersistConfig, authSlice.reducer);
-  
-  export const { onChecking, onLogin, onLogout, clearErrorMessage } = authSlice.actions;
-  
-  export default persistedAuthReducer;
+};
+
+const persistedAuthReducer = persistReducer(authPersistConfig, authSlice.reducer);
+
+export const { onChecking, onLogin, onLogout, clearErrorMessage } = authSlice.actions;
+
+export default persistedAuthReducer;

@@ -8,7 +8,6 @@ const LoginPage = () => {
             <LoginLayout />
             <section className='min-h-screen'>
                 <div className='px-4 pt-8 mx-auto lg:w-3/5'>
-                    <h1 className='text-left'>Iniciar Sesion</h1>
                     <LoginForm />
                 </div>
             </section>

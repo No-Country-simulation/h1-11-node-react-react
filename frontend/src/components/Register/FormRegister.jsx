@@ -1,39 +1,33 @@
 import { useForm } from "react-hook-form";
 import { useAuthStore } from "../../hooks/useAuthStore";
-// import { useState } from "react";
-
-// {
-//   "name":"Diego",
-//   "lastName": "Garay",
-//   "password": "Abc123",
-//   "email": "diegogaraycullaas@gmail.com",
-//   "birthdate": "02/10/1987",
-//   "dni": "12345675",
-//   "sex": "M",
-//   "bloodFactor": "O+"
-// }
+import { DateInputRegister } from "./dateInputRegister";
+import { useState } from "react";
 
 export default function FormRegister() {
+  const [currentGroup, setCurrentGroup] = useState(0);
+  const isDisabled = currentGroup === 0;
   // const [selected, setSelected] = useState('')
   const { startRegister } = useAuthStore();
 
   const {
     register,
     handleSubmit,
-    // formState: { errors },
+    formState: { errors },
     // watch,
     reset,
   } = useForm({
     defaultValues: {
       name: "",
       lastName: "",
-      password: "",
-      birthdate: "",
+      address: "",
       email: "",
       dni: "",
+      phone: "",
+      province: "",
+      location: "",
+      license: "",
       sex: "",
-      bloodFactor: "",
-      // confirmPassword: '',
+      especiality: "",
     },
     mode: "onChange",
   });
@@ -42,181 +36,56 @@ export default function FormRegister() {
     startRegister({
       name: data.name,
       lastName: data.lastName,
+      address: data.address,
       email: data.email,
-      password: data.password,
-      birthdate: data.birthdate,
       dni: data.dni,
+      phone: data.phone,
+      province: data.province,
+      location: data.location,
+      license: data.license,
       sex: data.sex,
-      bloodFactor: data.bloodFactor,
+      especiality: data.especiality,
     });
-    console.log(data);
-    reset();
+    //reset();
   });
 
   return (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col items-center justify-center w-full mb-16 text-blue"
+      className="flex flex-col items-center justify-center w-full mb-16 gap-6"
     >
-
-      {/* {-----------------------------------------------------------------------------------------------------------} */}
-      <label htmlFor="name">Nombres</label>
-      <div className="w-full input-container">
-        <input
-          {...register('name', {
-            required: {
-              value: true,
-              message: 'El nombre de la empresa es obligatorio.'
-            },
-            minLength: {
-              value: 2,
-              message: 'El nombre de la empresa no es válido.'
-            },
-            maxLength: {
-              value: 50,
-              message: 'El nombre de la empresa no es válido.'
-            }
-          })}
-          // placeholder={selected == 'name' ? '' : 'Nombre de la empresa...'}
-          className="w-full textField" type="text" id="name" name="name" />
-      </div>
-
-      {/* {-----------------------------------------------------------------------------------------------------------} */}
-
-      <label htmlFor="lastName">Apellidos</label>
-      <div className="w-full input-container">
-        <input
-          {...register('lastName', {
-            required: {
-              value: true,
-              message: 'El nombre de la empresa es obligatorio.'
-            },
-            minLength: {
-              value: 2,
-              message: 'El nombre de la empresa no es válido.'
-            },
-            maxLength: {
-              value: 50,
-              message: 'El nombre de la empresa no es válido.'
-            }
-          })}
-          className="w-full textField"
-          type="text"
-          id="lastName"
-          name="lastName"
-        />
-      </div>
-
-
-
-      <label htmlFor="sex">sex</label>
-      <div className="w-full input-container">
-        <input
-          {...register('sex', {
-            required: {
-              value: true,
-              message: 'El nombre de la empresa es obligatorio.'
-            }
-
-          })}
-          className="w-full textField"
-          type="text"
-          id="sex"
-          name="sex"
-        />
-      </div>
-
-      {/* {-----------------------------------------------------------------------------------------------------------} */}
-
-      <label htmlFor="email">Correo electronico</label>
-      <div className="w-full input-container">
-        <input
-          {...register('email', {
-            required: {
-              value: true,
-              message: 'El correo electrónico es obligatorio'
-            }
-          })}
-          className="w-full textField"
-          type="email"
-          id="email"
-          name="email"
-        />
-      </div>
-
-      {/* {-----------------------------------------------------------------------------------------------------------} */}
-
-      <label htmlFor="dni">DNI</label>
-      <div className="w-full input-container">
-        <input
-          {...register('dni', {
-            required: {
-              value: true,
-              message: 'El DNI es obligatorio'
-            }
-          })}
-          className="w-full textField"
-          type="number"
-          id="dni"
-          name="dni"
-        />
-      </div>
-
-      {/* {-----------------------------------------------------------------------------------------------------------} */}
-      <label htmlFor="birthdate">Birthdate</label>
-      <div className="w-full input-container">
-        <input
-          {...register('birthdate', {
-            required: {
-              value: true,
-              message: 'El correo electrónico es obligatorio'
-            }
-          })}
-          className="w-full textField" type="number" id="birthdate" name="birthdate" />
-      </div>
-      {/* {-----------------------------------------------------------------------------------------------------------} */}
-      <label htmlFor="BloodFactor">BloodFactor</label>
-      <div className="w-full input-container">
-        <input
-          {...register('bloodFactor', {
-            required: {
-              value: true,
-              message: 'El correo electrónico es obligatorio'
-            }
-          })}
-          className="w-full textField" type="text" id="bloodFactor" name="bloodFactor" />
-      </div>
-      {/* {-----------------------------------------------------------------------------------------------------------} */}
-
-      <label htmlFor="password">Contraseña</label>
-      <div className="w-full input-container">
-        <input
-
-
-          {...register('password', {
-            required: {
-              value: true,
-              message: 'La contraseña es obligatoria'
-            },
-
-          })} className="w-full textField" type="password" id="password" />
-      </div>
-
-      {/* <label htmlFor="password">Confirmar contraseña</label>
-      <div className="w-full input-container">
-        <input
-          className="w-full textField"
-          type="password"
-          id="confirmPassword"
-        />
-      </div> */}
-
-      <button type="submit" className="block w-full mt-8 btn btn-template-1">
-        Registrarme
-      </button>
-      {/* <button className="block w-full mt-4 btn btn-template-1">
-        Iniciar Sesión
-      </button> */}
+      {
+        DateInputRegister[currentGroup] && DateInputRegister[currentGroup]?.map((inputName) => {
+          return (
+            <div key={inputName.name} className="flex flex-col">
+              <input
+                placeholder={inputName.placeholder}
+                id={inputName.name}
+                {...register(inputName.name, {
+                  ...inputName.validate
+                })}
+              />
+              {errors[inputName.name] && <p className='text-red-600'>{errors[inputName.name].message}</p>}
+            </div>
+          )
+        })
+      }
+      {currentGroup < DateInputRegister.length - 1 ?
+        <div className="flex flex-row">
+          <button type="submit" className="w- mt-8" disabled={isDisabled} onClick={() => setCurrentGroup(currentGroup - 1)}>
+            Atrás
+          </button>
+          <button type="submit" className="w- mt-8" onClick={() => setCurrentGroup(currentGroup + 1)}>
+            Continuar
+          </button>
+        </div>
+        :
+        <div className="flex flex-col">
+          <button type="submit" className="w- mt-8">
+            Registrarme
+          </button>
+        </div>
+      }
     </form>
   );
 }
