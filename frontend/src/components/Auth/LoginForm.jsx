@@ -1,8 +1,10 @@
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../hooks/useAuthStore';
 
 const LoginForm = () => {
+
+  const navigate = useNavigate();
 
   const { startLogin } = useAuthStore();
 

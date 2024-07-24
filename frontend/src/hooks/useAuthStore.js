@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 // import Swal from 'sweetalert2'
-// import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 // import { pageApi } from '../api/PageApi'
 import { onChecking, onLogin } from '../store/auth/authSlice'
@@ -11,17 +11,20 @@ export const useAuthStore = () => {
   const dispatch = useDispatch()
 
 
-  // const navigateTo = useNavigate()
+  const navigate = useNavigate()
 
 
   const startRegister = async User => {
     dispatch(onChecking());
     try {
+      console.log(User);
       const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register-doctor`, {
 
         ...User,
       })
-      console.log(User)
+
+      navigate("/");
+
       console.log(data)
       // localStorage.setItem('token', data.token)
       // localStorage.setItem('token-init-date', new Date().getTime())
@@ -29,7 +32,7 @@ export const useAuthStore = () => {
       console.log('Usuario creado correctamente', 'success')
       // Swal.fire('Usuario correctamente registrado!')
       // navigateTo(`/dashboard`)
-    } catch (error) {
+    } catch ({ message, error }) {
       // Swal.fire({
       //   icon: 'error',
       //   title: 'Oops...',
@@ -49,7 +52,8 @@ export const useAuthStore = () => {
       const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, { ...User, });
       if (data) {
         console.log(data);
-        dispatch(onLogin(data))
+        dispatch(onLogin(data));
+        navigate("/home");
       }
     } catch (error) {
       console.log('Error de autenticación', error.message);
