@@ -14,7 +14,7 @@ export default function FormRegister() {
     handleSubmit,
     formState: { errors },
     // watch,
-    reset,
+    //reset,
   } = useForm({
     defaultValues: {
       name: "",
