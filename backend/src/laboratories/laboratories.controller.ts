@@ -34,12 +34,17 @@ export class LaboratoriesController {
   @ApiBearerAuth()
   @ApiQuery({
     name: 'type',
-    type: String,
+    enum: LaboratoryType,
     required: false,
   })
+  @ApiQuery({
+    name: 'name',
+    type: String,
+    required: false,
+    description: 'Filter by laboratory name' })
   @Get()
-  findAll(@Query('type') type?: LaboratoryType) {
-    return this.laboratoriesService.findLaboratories(type);
+  findAll(@Query('type') type?: LaboratoryType, @Query('name') name?: string) {
+    return this.laboratoriesService.findLaboratories({ type, name });
   }
 
   @ApiOperation({

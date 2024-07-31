@@ -8,9 +8,10 @@ import { RoleModule } from './role/role.module';
 import { UsersModule } from './users/users.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { LaboratoriesModule } from './laboratories/laboratories.module';
+import { DrugsModule } from './drugs/drugs.module';
 
 @Module({
-  imports: [AuthModule, EmailModule, AppointmentsModule, RoleModule, UsersModule, OrganizationsModule, LaboratoriesModule],
+  imports: [AuthModule, EmailModule, AppointmentsModule, RoleModule, UsersModule, OrganizationsModule, LaboratoriesModule, DrugsModule],
   providers: [EmailService],
 })
 export class AppModule {}

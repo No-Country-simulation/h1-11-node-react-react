@@ -150,7 +150,18 @@ enum LaboratoryType {
 
 model Laboratory {
   id          String @id @default(uuid())
+  name        String  @unique
   contactName String
   type        LaboratoryType
   isActive    Boolean @default(true)
+  drugs       Drug[]
+}
+
+model Drug {
+  id          String @id @default(uuid())
+  name        String
+  description String
+  isActive    Boolean @default(true)
+  laboratoryId  String
+  laboratory  Laboratory      @relation(fields: [laboratoryId], references: [id])
 }

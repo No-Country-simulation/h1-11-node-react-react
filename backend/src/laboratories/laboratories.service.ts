@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { CreateLaboratoryDto, LaboratoryType } from './dto/create-laboratory.dto';
 import { UpdateLaboratoryDto } from './dto/update-laboratory.dto';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class LaboratoriesService extends PrismaClient implements OnModuleInit{
@@ -22,9 +22,25 @@ export class LaboratoriesService extends PrismaClient implements OnModuleInit{
     }
   }
 
-  async findLaboratories(type?: LaboratoryType) {
-    const where = type ? { type } : {};
-    return await this.laboratory.findMany({where});
+  async findLaboratories(params: {
+    type?: LaboratoryType;
+    name?: string;
+  }) {
+    const { type, name } = params;
+
+    const where: Prisma.LaboratoryWhereInput = {};
+
+    if (type) {
+      where.type = type;
+    }
+
+    if (name) {
+      where.name = { contains: name };
+    }
+    return await this.laboratory.findMany({
+      where,
+      orderBy: {name: 'asc'}
+      });
   }
 
   findOneLaboratory(id: string) {
