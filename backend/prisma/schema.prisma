@@ -150,6 +150,7 @@ enum LaboratoryType {
 
 model Laboratory {
   id          String @id @default(uuid())
+  name        String  @unique
   contactName String
   type        LaboratoryType
   isActive    Boolean @default(true)

@@ -80,4 +80,14 @@ export class DrugsService extends PrismaClient implements OnModuleInit {
       },
     });
   }
+
+  async search(query: string) {
+    const medications = await this.drug.findMany(
+      {
+        where: {name: {contains: query }},
+        orderBy: {name: 'asc'}
+      }
+    )
+    return medications;
+  }
 }
