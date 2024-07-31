@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { UserResponse } from './dto/response-get-user.dto';
 import { PaginationDto } from 'src/common';
 
@@ -56,6 +56,54 @@ export class UsersService extends PrismaClient implements OnModuleInit {
     }
   }
 
+  async findDoctorsByName(lastName?: string, name?: string) {
+
+    /*if (lastName) {
+      where.user.OR = [{lastName: { contains: lastName }}, {lastName: { startsWith: lastName }}, {lastName: { endsWith: lastName }}];
+    }
+
+    if (name) {
+      where.user.OR = [{name: { contains: name }}, {name: { startsWith: name }}, {name: { endsWith: name }}];
+    }*/
+    return await this.doctor.findMany({
+      where: {
+        user: {
+          OR : [
+            name ? {name: { contains: name }}: undefined,
+            lastName ? { lastName: {contains: lastName }}: undefined
+          ].filter(Boolean)
+        }
+      },
+      include: {
+        user: true
+      }
+    });
+  }
+
+  async findPatientByName(lastName?: string, name?: string, dni?: string) {
+
+    /*if (lastName) {
+      where.user.OR = [{lastName: { contains: lastName }}, {lastName: { startsWith: lastName }}, {lastName: { endsWith: lastName }}];
+    }
+
+    if (name) {
+      where.user.OR = [{name: { contains: name }}, {name: { startsWith: name }}, {name: { endsWith: name }}];
+    }*/
+    return await this.patient.findMany({
+      where: {
+        user: {
+          OR : [
+            name ? {name: { contains: name }}: undefined,
+            lastName ? { lastName: {contains: lastName }}: undefined,
+            dni ? { dni: {equals: dni }}: undefined
+          ].filter(Boolean)
+        }
+      },
+      include: {
+        user: true
+      }
+    });
+  }
 
   async findOne(id: string) {
     const user = await this.user.findUnique({
