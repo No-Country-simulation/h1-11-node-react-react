@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { useAuthStore } from "../../hooks/useAuthStore";
 import { DateInputRegister } from "./dateInputRegister";
 import { useState } from "react";
+import { Button } from "../ui/button";
 
 export default function FormRegister() {
   const [currentGroup, setCurrentGroup] = useState(0);
@@ -72,18 +73,21 @@ export default function FormRegister() {
       }
       {currentGroup < DateInputRegister.length - 1 ?
         <div className="flex flex-row">
-          <button type="submit" className="w- mt-8" disabled={isDisabled} onClick={() => setCurrentGroup(currentGroup - 1)}>
+          {/*  <button type="submit" className="w- mt-8" disabled={isDisabled} onClick={() => setCurrentGroup(currentGroup - 1)}>
             Atrás
-          </button>
-          <button type="submit" className="w- mt-8" onClick={() => setCurrentGroup(currentGroup + 1)}>
+          </button> */}
+          <Button className="mt-8" variant="default" size="lg" type="submit" disabled={isDisabled} onClick={() => setCurrentGroup(currentGroup - 1)} > Atras</Button>
+          {/* <button type="submit" className="w- mt-8" onClick={() => setCurrentGroup(currentGroup + 1)}>
             Continuar
-          </button>
+          </button> */}
+          <Button className="mt-8" variant="default" size="lg" type="submit" onClick={() => setCurrentGroup(currentGroup + 1)} > Continuar</Button>
         </div>
         :
         <div className="flex flex-col">
-          <button type="submit" className="w- mt-8">
+          {/* <button type="submit" className="w- mt-8">
             Registrarme
-          </button>
+          </button> */}
+          <Button className="mt-8" variant="default" size="lg" type="submit"> Registrarme</Button>
         </div>
       }
     </form>

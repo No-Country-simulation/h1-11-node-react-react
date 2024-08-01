@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Button } from "../../components/ui/button";
 
 export default function HomePage() {
 
@@ -14,21 +15,21 @@ export default function HomePage() {
                 <img className="mt-6" src="./images/calendar.png" alt="Calendario" />
                 <span>Citas medicas</span>
                 <span>Aquí podrás agendar tus citas medicas.</span>
-                <button className="w-full">
+                <Button className="w-full" variant="primary" size="lg">
                     <Link to={"/appointments"}>
                         Agendar cita
                     </Link>
-                </button>
+                </Button>
             </div>
             <div className="bg-white lg:w-96 m-4 w-80 h-auto rounded-xl flex flex-col items-center gap-6">
                 <img className="mt-6" src="./images/Tests.png" alt="Historial" />
                 <span>Historial</span>
                 <p className="pl-2">Aquí podrás ver el registro de tus recetas medicas</p>
-                <button className="w-full">
+                <Button className="w-full" variant="primary" size="lg">
                     <Link to={"/recipes"}>
                         Ver historial
                     </Link>
-                </button>
+                </Button>
             </div>
         </div>
     )

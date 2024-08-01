@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../hooks/useAuthStore';
-
+import { Button } from "../ui/button";
 const LoginForm = () => {
 
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const LoginForm = () => {
       </div>
       <span className='flex w-full justify-end'>¿Olvidaste tu contraseña?</span>
       <div className='w-56 h-24 flex flex-col items-center'>
-        <button type="submit">Ingresar</button>
+        <Button className="bg-pink-700" variant="primary" size="lg" type="submit"> Ingresar</Button>
         <div className='flex flex-row h-full items-end'>
           <span>¿No tienes cuenta?</span>
           <Link to="/register" className=' text-fuchsia-600'>Regístrate</Link>
