@@ -9,9 +9,10 @@ import { UsersModule } from './users/users.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { LaboratoriesModule } from './laboratories/laboratories.module';
 import { DrugsModule } from './drugs/drugs.module';
+import { TreatmentsModule } from './treatments/treatments.module';
 
 @Module({
-  imports: [AuthModule, EmailModule, AppointmentsModule, RoleModule, UsersModule, OrganizationsModule, LaboratoriesModule, DrugsModule],
+  imports: [AuthModule, EmailModule, AppointmentsModule, RoleModule, UsersModule, OrganizationsModule, LaboratoriesModule, DrugsModule, TreatmentsModule],
   providers: [EmailService],
 })
 export class AppModule {}

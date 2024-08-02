@@ -77,6 +77,7 @@ model Patient {
   user          User            @relation(fields: [userId], references: [id])
   userId        String          @unique
   DoctorPatient DoctorPatient[]
+  treatments    Treatment[]
 
   @@index([isActive])
 }
@@ -104,6 +105,7 @@ model Doctor {
   user          User            @relation(fields: [userId], references: [id])
   userId        String          @unique
   DoctorPatient DoctorPatient[]
+  treatments    Treatment[]
 
   @@index([isActive])
 }
@@ -164,4 +166,86 @@ model Drug {
   isActive    Boolean @default(true)
   laboratoryId  String
   laboratory  Laboratory      @relation(fields: [laboratoryId], references: [id])
+}
+
+model Treatment {
+  id          String @id @default(uuid())
+  description String
+  startDate   DateTime
+  endDate     DateTime
+  patientId   String
+  doctorId    String
+  Patient     Patient     @relation(fields: [patientId], references: [id])
+  Doctor      Doctor      @relation(fields: [doctorId], references: [id])
+  Medications      Medication[]
+  NutritionPlans   NutritionPlan[]
+  PhysicalActivityPlans   PhysicalActivityPlan[]
+}
+
+enum MedicationFrequency {
+  ONCE_A_DAY
+  TWICE_A_DAY
+  THREE_TIMES_A_DAY
+}
+
+model Medication {
+  id          String        @id @default(uuid())
+  medicine    String
+  dosage      String
+  frequency   MedicationFrequency
+  days        Int
+  treatment   Treatment?    @relation(fields: [treatmentId], references: [id])
+  treatmentId String
+}
+
+model NutritionPlanMeal {
+  id              String           @id @default(uuid())
+  name            String
+  nutritionPlanId String
+  nutritionPlan   NutritionPlan @relation(fields: [nutritionPlanId], references: [id])
+}
+
+model NutritionPlanRestriction {
+  id              String           @id @default(uuid())
+  name            String
+  nutritionPlanId String
+  nutritionPlan   NutritionPlan @relation(fields: [nutritionPlanId], references: [id])
+}
+
+model NutritionPlan {
+  id          String @id @default(uuid())
+  description String
+  calories    Int
+  meals       NutritionPlanMeal[]
+  restrictions NutritionPlanRestriction[]
+  treatment   Treatment?    @relation(fields: [treatmentId], references: [id])
+  treatmentId String
+}
+
+enum ActivityIntensity {
+  BAJA
+  MEDIA
+  ALTA
+}
+
+enum ActivityFrequency {
+  DIARIA
+  SEMANAL
+}
+
+model PhysicalActivityPlanExercise {
+  id              String         @id @default(uuid())
+  name            String
+  physicalActivityPlanId String
+  physicalActivityPlan   PhysicalActivityPlan @relation(fields: [physicalActivityPlanId], references: [id])
+}
+
+model PhysicalActivityPlan {
+  id          String        @id @default(uuid())
+  description String
+  frequency   ActivityFrequency
+  intensity   ActivityIntensity
+  exercises   PhysicalActivityPlanExercise[]
+  treatment   Treatment?    @relation(fields: [treatmentId], references: [id])
+  treatmentId String
 }
