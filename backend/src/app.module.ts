@@ -10,9 +10,12 @@ import { OrganizationsModule } from './organizations/organizations.module';
 import { LaboratoriesModule } from './laboratories/laboratories.module';
 import { DrugsModule } from './drugs/drugs.module';
 import { TreatmentsModule } from './treatments/treatments.module';
+import { MedicationTrackingModule } from './medication-tracking/medication-tracking.module';
+import { NutritionPlanTrackingModule } from './nutrition-plan-tracking/nutrition-plan-tracking.module';
+import { PhysicalActivityPlanTrackingModule } from './physical-activity-plan-tracking/physical-activity-plan-tracking.module';
 
 @Module({
-  imports: [AuthModule, EmailModule, AppointmentsModule, RoleModule, UsersModule, OrganizationsModule, LaboratoriesModule, DrugsModule, TreatmentsModule],
+  imports: [AuthModule, EmailModule, AppointmentsModule, RoleModule, UsersModule, OrganizationsModule, LaboratoriesModule, DrugsModule, TreatmentsModule, MedicationTrackingModule, NutritionPlanTrackingModule, PhysicalActivityPlanTrackingModule],
   providers: [EmailService],
 })
 export class AppModule {}
