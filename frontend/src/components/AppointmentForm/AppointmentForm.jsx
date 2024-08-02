@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/popover"
 
 import { Calendar } from "@/components/ui/calendar"
-/* import DatePicker from 'react-date-picker'; */
+import { especialidadesMedicas, horarios, medicos } from "../../utils/select";
 
 export default function AppointmentsForm() {
     const [isPresential, setIsPresential] = useState(true);
@@ -47,65 +47,6 @@ export default function AppointmentsForm() {
             state: "",
         })
     });
-
-    const especialidadesMedicas = [
-        { id: 1, nombre: 'Cardiología' },
-        { id: 2, nombre: 'Dermatología' },
-        { id: 3, nombre: 'Gastroenterología' },
-        { id: 4, nombre: 'Neurología' },
-        { id: 5, nombre: 'Oftalmología' },
-        { id: 6, nombre: 'Pediatría' },
-        { id: 7, nombre: 'Psiquiatría' },
-        { id: 8, nombre: 'Traumatología' },
-        { id: 9, nombre: 'Urología' },
-        // Puedes agregar más especialidades médicas según sea necesario
-    ].map((opciones) => ({ value: opciones.id, label: opciones.nombre }));
-
-    /**
-     * const especialidadesMedicas = [
-  { value: 1, label: 'Cardiología' },
-  { value: 2, label: 'Dermatología' },
-  { value: 3, label: 'Gastroenterología' },
-  { value: 4, label: 'Neurología' },
-  { value: 5, label: 'Oftalmología' },
-  { value: 6, label: 'Pediatría' },
-  { value: 7, label: 'Psiquiatría' },
-  { value: 8, label: 'Traumatología' },
-  { value: 9, label: 'Urología' },
-  // Puedes agregar más especialidades médicas según sea necesario
-];
-     * 
-     */
-
-
-    const medicos = [
-        { value: 1, label: 'María García' },
-        { value: 2, label: 'Juan Pérez' },
-        { value: 3, label: 'Laura Martínez' },
-        { value: 4, label: 'Carlos Rodríguez' },
-        { value: 5, label: 'Ana López' },
-        { value: 6, label: 'Pedro Sánchez' },
-        { value: 7, label: 'Sofía Fernández' },
-        { value: 8, label: 'Diego González' },
-        { value: 9, label: 'Elena Ramírez' },
-        // Puedes agregar más nombres inventados según sea necesario
-    ];
-    const horarios = [
-        { value: 1, label: '7:00 am' },
-        { value: 2, label: '8:00 am' },
-        { value: 3, label: '9:00 am' },
-        { value: 4, label: '10:00 am' },
-        { value: 5, label: '11:00 am' },
-        { value: 6, label: '12:00 pm' },
-        { value: 7, label: '1:00 pm' },
-        { value: 8, label: '2:00 pm' },
-        { value: 9, label: '3:00 pm' },
-        { value: 10, label: '4:00 pm' },
-        { value: 11, label: '5:00 pm' },
-        { value: 12, label: '6:00 pm' },
-        { value: 13, label: '7:00 pm' },
-    ];
-
     const handlePresentialChange = () => {
         setIsPresential(!isPresential);
     }
