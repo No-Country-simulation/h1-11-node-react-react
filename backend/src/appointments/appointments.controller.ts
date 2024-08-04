@@ -3,6 +3,8 @@ import { AppointmentsService } from './appointments.service';
 import { AppointmentState, CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { ApiQuery, ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Auth } from 'src/auth/decorators';
+import { ValidRoles } from 'src/auth/interfaces';
 
 @ApiTags('Appointments')
 @Controller('appointments')
@@ -69,6 +71,7 @@ export class AppointmentsController {
   @ApiResponse({ status: 400, description: 'BadRequest' })
   @ApiResponse({ status: 403, description: 'Forbidden, Token' })
   @ApiBearerAuth()
+  @Auth(ValidRoles.DOCTOR)
   @Patch('update-appointment/:id')
   async update(@Param('id') id: string, @Body() updateAppointmentDto: UpdateAppointmentDto) {
     try {
@@ -93,6 +96,7 @@ export class AppointmentsController {
   @ApiResponse({ status: 400, description: 'BadRequest' })
   @ApiResponse({ status: 403, description: 'Forbidden, Token' })
   @ApiBearerAuth()
+  @Auth(ValidRoles.DOCTOR)
   @Delete('cancel-appointment/:id')
   async remove(@Param('id') id: string) {
     try {

@@ -65,18 +65,22 @@ model UserRole {
 }
 
 model Patient {
-  id          String    @id @default(uuid())
-  birthdate   DateTime?
-  bloodFactor String
+  id           String        @id @default(uuid())
+  birthdate    DateTime?
+  bloodFactor  String
   appointments Appointment[]
-  isActive Boolean @default(true)
+  isActive     Boolean       @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user          User            @relation(fields: [userId], references: [id])
-  userId        String          @unique
-  DoctorPatient DoctorPatient[]
+  user                         User                           @relation(fields: [userId], references: [id])
+  userId                       String                         @unique
+  DoctorPatient                DoctorPatient[]
+  treatments                   Treatment[]
+  MedicationTracking           MedicationTracking[]
+  NutritionPlanTracking        NutritionPlanTracking[]
+  PhysicalActivityPlanTracking PhysicalActivityPlanTracking[]
 
   @@index([isActive])
 }
@@ -91,9 +95,9 @@ model DoctorPatient {
 }
 
 model Doctor {
-  id          String @id @default(uuid())
-  especiality String
-  license     String
+  id           String        @id @default(uuid())
+  especiality  String
+  license      String
   appointments Appointment[]
 
   isActive Boolean @default(true)
@@ -104,6 +108,7 @@ model Doctor {
   user          User            @relation(fields: [userId], references: [id])
   userId        String          @unique
   DoctorPatient DoctorPatient[]
+  treatments    Treatment[]
 
   @@index([isActive])
 }
@@ -118,29 +123,29 @@ enum AppointmentState {
 }
 
 model Appointment {
-  id          String    @id @default(uuid())
-  patient     Patient   @relation(fields: [patientId], references: [id])
+  id          String           @id @default(uuid())
+  patient     Patient          @relation(fields: [patientId], references: [id])
   patientId   String
-  doctor      Doctor    @relation(fields: [doctorId], references: [id])
+  doctor      Doctor           @relation(fields: [doctorId], references: [id])
   doctorId    String
   date        DateTime
   startTime   DateTime
   endTime     DateTime
   description String
-  state       AppointmentState  @default(PENDIENTE)
-  isActive    Boolean @default(true)
+  state       AppointmentState @default(PENDIENTE)
+  isActive    Boolean          @default(true)
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@index([patientId, doctorId, date])
   @@unique([date, startTime, endTime])
+  @@index([patientId, doctorId, date])
 }
 
 model Organization {
-  id          String @id @default(uuid())
-  name        String
-  email       String
+  id    String @id @default(uuid())
+  name  String
+  email String
 }
 
 enum LaboratoryType {
@@ -149,19 +154,134 @@ enum LaboratoryType {
 }
 
 model Laboratory {
-  id          String @id @default(uuid())
-  name        String  @unique
+  id          String         @id @default(uuid())
+  name        String         @unique
   contactName String
   type        LaboratoryType
-  isActive    Boolean @default(true)
+  isActive    Boolean        @default(true)
   drugs       Drug[]
 }
 
 model Drug {
-  id          String @id @default(uuid())
-  name        String
-  description String
-  isActive    Boolean @default(true)
-  laboratoryId  String
-  laboratory  Laboratory      @relation(fields: [laboratoryId], references: [id])
+  id           String     @id @default(uuid())
+  name         String
+  description  String
+  isActive     Boolean    @default(true)
+  laboratoryId String
+  laboratory   Laboratory @relation(fields: [laboratoryId], references: [id])
+}
+
+model Treatment {
+  id                    String                 @id @default(uuid())
+  description           String
+  startDate             DateTime
+  endDate               DateTime
+  patientId             String
+  doctorId              String
+  Patient               Patient                @relation(fields: [patientId], references: [id])
+  Doctor                Doctor                 @relation(fields: [doctorId], references: [id])
+  Medications           Medication[]
+  NutritionPlans        NutritionPlan[]
+  PhysicalActivityPlans PhysicalActivityPlan[]
+}
+
+enum MedicationFrequency {
+  ONCE_A_DAY
+  TWICE_A_DAY
+  THREE_TIMES_A_DAY
+}
+
+model Medication {
+  id                 String               @id @default(uuid())
+  medicine           String
+  dosage             String
+  frequency          MedicationFrequency
+  days               Int
+  treatment          Treatment?           @relation(fields: [treatmentId], references: [id])
+  treatmentId        String
+  MedicationTracking MedicationTracking[]
+}
+
+model NutritionPlanMeal {
+  id              String        @id @default(uuid())
+  name            String
+  nutritionPlanId String
+  nutritionPlan   NutritionPlan @relation(fields: [nutritionPlanId], references: [id])
+}
+
+model NutritionPlanRestriction {
+  id              String        @id @default(uuid())
+  name            String
+  nutritionPlanId String
+  nutritionPlan   NutritionPlan @relation(fields: [nutritionPlanId], references: [id])
+}
+
+model NutritionPlan {
+  id                    String                     @id @default(uuid())
+  description           String
+  calories              Int
+  meals                 NutritionPlanMeal[]
+  restrictions          NutritionPlanRestriction[]
+  treatment             Treatment?                 @relation(fields: [treatmentId], references: [id])
+  treatmentId           String
+  NutritionPlanTracking NutritionPlanTracking[]
+}
+
+enum ActivityIntensity {
+  BAJA
+  MEDIA
+  ALTA
+}
+
+enum ActivityFrequency {
+  DIARIA
+  SEMANAL
+}
+
+model PhysicalActivityPlanExercise {
+  id                     String               @id @default(uuid())
+  name                   String
+  physicalActivityPlanId String
+  physicalActivityPlan   PhysicalActivityPlan @relation(fields: [physicalActivityPlanId], references: [id])
+}
+
+model PhysicalActivityPlan {
+  id                           String                         @id @default(uuid())
+  description                  String
+  frequency                    ActivityFrequency
+  intensity                    ActivityIntensity
+  exercises                    PhysicalActivityPlanExercise[]
+  treatment                    Treatment?                     @relation(fields: [treatmentId], references: [id])
+  treatmentId                  String
+  PhysicalActivityPlanTracking PhysicalActivityPlanTracking[]
+}
+
+model MedicationTracking {
+  id           String     @id @default(uuid())
+  medication   Medication @relation(fields: [medicationId], references: [id])
+  medicationId String
+  patientId    String
+  date         DateTime   @default(now())
+  completed    Boolean    @default(false)
+  patient      Patient    @relation(fields: [patientId], references: [id])
+}
+
+model NutritionPlanTracking {
+  id              String        @id @default(uuid())
+  nutritionPlan   NutritionPlan @relation(fields: [nutritionPlanId], references: [id])
+  nutritionPlanId String
+  patientId       String
+  date            DateTime      @default(now())
+  completed       Boolean       @default(false)
+  patient         Patient       @relation(fields: [patientId], references: [id])
+}
+
+model PhysicalActivityPlanTracking {
+  id                     String               @id @default(uuid())
+  physicalActivityPlan   PhysicalActivityPlan @relation(fields: [physicalActivityPlanId], references: [id])
+  physicalActivityPlanId String
+  patientId              String
+  date                   DateTime             @default(now())
+  completed              Boolean              @default(false)
+  patient                Patient              @relation(fields: [patientId], references: [id])
 }
