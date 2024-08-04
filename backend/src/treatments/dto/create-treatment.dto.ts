@@ -31,15 +31,15 @@ export class CreateTreatmentDto {
   @ApiProperty()
   @IsArray()
   @IsOptional()
-  medications?: CreateMedicationDto[];
+  Medications?: CreateMedicationDto[];
 
   @ApiProperty()
   @IsArray()
   @IsOptional()
-  physicalActivityPlans?: CreatePhysicalActivityPlanDto[];
+  PhysicalActivityPlans?: CreatePhysicalActivityPlanDto[];
 
   @ApiProperty()
   @IsArray()
   @IsOptional()
-  nutritionPlans?: CreateNutritionPlanDto[];
+  NutritionPlans?: CreateNutritionPlanDto[];
 }
