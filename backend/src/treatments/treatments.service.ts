@@ -9,7 +9,7 @@ export class TreatmentsService extends PrismaClient implements OnModuleInit{
 
   onModuleInit() {
     this.$connect();
-    this.logger.log('Organizations Service connected to database')
+    this.logger.log('Treatment Service connected to database')
   }
   create(createTreatmentDto: CreateTreatmentDto) {
     return this.treatment.create({
@@ -63,7 +63,13 @@ export class TreatmentsService extends PrismaClient implements OnModuleInit{
   }
 
   findAll() {
-    return `This action returns all treatments`;
+    return this.treatment.findMany({
+      include: {
+        Medications: true,
+        PhysicalActivityPlans: true,
+        NutritionPlans: true,
+        },
+    });
   }
 
   findOne(id: number) {
