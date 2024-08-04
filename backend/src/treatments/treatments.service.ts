@@ -11,12 +11,12 @@ export class TreatmentsService extends PrismaClient implements OnModuleInit{
     this.$connect();
     this.logger.log('Treatment Service connected to database')
   }
-  create(createTreatmentDto: CreateTreatmentDto) {
-    return this.treatment.create({
+  async create(createTreatmentDto: CreateTreatmentDto) {
+    return await this.treatment.create({
       data: {
         ...createTreatmentDto,
         Medications: {
-          create: createTreatmentDto.medications?.map(med => ({
+          create: createTreatmentDto.Medications?.map(med => ({
             ...med,
             frequency: med.frequency,
             MedicationTracking: {
@@ -28,7 +28,7 @@ export class TreatmentsService extends PrismaClient implements OnModuleInit{
           })) || [],
         },
         PhysicalActivityPlans: {
-          create: createTreatmentDto.physicalActivityPlans?.map(plan => ({
+          create: createTreatmentDto.PhysicalActivityPlans?.map(plan => ({
             ...plan,
             exercises: {
               create: plan.exercises,
@@ -42,7 +42,7 @@ export class TreatmentsService extends PrismaClient implements OnModuleInit{
           })) || [],
         },
         NutritionPlans: {
-          create: createTreatmentDto.nutritionPlans?.map(plan => ({
+          create: createTreatmentDto.NutritionPlans?.map(plan => ({
             ...plan,
             meals: {
               create: plan.meals,
