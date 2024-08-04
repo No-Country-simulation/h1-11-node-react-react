@@ -26,8 +26,28 @@ export default function HomePage() {
                 <span>Historial</span>
                 <p className="pl-2">Aquí podrás ver el registro de tus recetas medicas</p>
                 <Button className="w-full" variant="primary" size="lg">
-                    <Link to={"/recipes"}>
+                    <Link to={"/history"}>
                         Ver historial
+                    </Link>
+                </Button>
+            </div>
+            <div className="bg-white lg:w-96 m-4 w-80 h-auto rounded-xl flex flex-col items-center gap-6">
+                <img className="mt-6" src="./images/recetas.png" alt="Recetas" />
+                <span>Recetas</span>
+                <p className="pl-2">Aquí podrás ver todas las recetas cargadas por tu médico</p>
+                <Button className="w-full" variant="primary" size="lg">
+                    <Link to={"/recipes"}>
+                        Ver recetas
+                    </Link>
+                </Button>
+            </div>
+            <div className="bg-white lg:w-96 m-4 w-80 h-auto rounded-xl flex flex-col items-center gap-6">
+                <img className="mt-6" src="./images/nutricion.png" alt="Nutrición" />
+                <span>Nutrición</span>
+                <p className="pl-2">Aquí podrás ver la dieta recomendada por tu médico</p>
+                <Button className="w-full" variant="primary" size="lg">
+                    <Link to={"/diet"}>
+                        Ver dieta
                     </Link>
                 </Button>
             </div>
