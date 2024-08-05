@@ -9,6 +9,7 @@ import AppointmentsPage from "../pages/Appointments/AppointmentPage";
 import RecipesPage from "../pages/Recipes/RecipesPage";
 import HistoryPage from "../pages/History/HistoryPage";
 import DietPage from "../pages/Diet/DietPage";
+import InformationPage from "../pages/Information/InformationPage";
 
 export const AuthRoutes = () => {
   return (
@@ -21,6 +22,7 @@ export const AuthRoutes = () => {
       <Route path="/recipes" element={<RecipesPage />} />
       <Route path="/history" element={<HistoryPage />} />
       <Route path="/diet" element={<DietPage />} />
+      <Route path="/information" element={<InformationPage />} />
 
     </Routes>
   );
