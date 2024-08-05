@@ -28,9 +28,8 @@ export default function FormRegister() {
       phone: "",
       province: "",
       location: "",
-      license: "",
       sex: "",
-      especiality: "",
+      bloodFactor: "",
     },
     mode: "onChange",
   });
@@ -45,9 +44,8 @@ export default function FormRegister() {
       phone: data.phone,
       province: data.province,
       location: data.location,
-      license: data.license,
       sex: data.sex,
-      especiality: data.especiality,
+      bloodFactor: data.bloodFactor
     });
     navigate('/information');
     //reset();

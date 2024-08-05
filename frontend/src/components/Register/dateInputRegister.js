@@ -130,37 +130,27 @@ export const DateInputRegister = [
                 }
             }
         }],
-    [{
-        placeholder: "Licencia",
-        name: "license",
-        type: "text",
-        validate: {
-            required: {
-                value: true,
-                message: 'La Licencia es obligatorio.'
-            },
-        }
-    },
-    {
-        placeholder: "Sexo",
-        name: "sex",
-        type: "text",
-        validate: {
-            required: {
-                value: true,
-                message: 'El genero es obligatorio'
-            },
-        }
-    }],
-    [{
-        placeholder: "Especialidad",
-        name: "especiality",
-        type: "text",
-        validate: {
-            required: {
-                value: true,
-                message: 'La especialidad es requerida'
-            },
-        }
-    }],
+    [
+        {
+            placeholder: "Sexo",
+            name: "sex",
+            type: "text",
+            validate: {
+                required: {
+                    value: true,
+                    message: 'El genero es obligatorio'
+                },
+            }
+        },
+        {
+            placeholder: "Grupo sanguíneo",
+            name: "bloodFactor",
+            type: "text",
+            validate: {
+                required: {
+                    value: true,
+                    message: 'El factor es requerido'
+                },
+            }
+        }],
 ];

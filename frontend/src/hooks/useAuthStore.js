@@ -18,7 +18,7 @@ export const useAuthStore = () => {
     dispatch(onChecking());
     try {
       console.log(User);
-      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register-doctor`, {
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register-patient`, {
 
         ...User,
       })
