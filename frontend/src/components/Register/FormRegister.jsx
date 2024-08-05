@@ -3,10 +3,12 @@ import { useAuthStore } from "../../hooks/useAuthStore";
 import { DateInputRegister } from "./dateInputRegister";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 
 export default function FormRegister() {
   const [currentGroup, setCurrentGroup] = useState(0);
   const isDisabled = currentGroup === 0;
+  const navigate = useNavigate();
   // const [selected, setSelected] = useState('')
   const { startRegister } = useAuthStore();
 
@@ -47,6 +49,7 @@ export default function FormRegister() {
       sex: data.sex,
       especiality: data.especiality,
     });
+    navigate('/information');
     //reset();
   });
 
